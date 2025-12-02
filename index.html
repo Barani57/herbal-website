@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Natural Herbal Powders - Skin, Hair & Wellness | Herbal Wellness Store</title>
+    <meta name="description" content="Buy 100% natural herbal powders for skin glow, hair health, and wellness. Traditional Ayurvedic recipes. Free shipping above ₹500. Order now!">
+    <meta name="keywords" content="herbal powder, ayurvedic powder, skin powder, hair powder, natural remedies, organic herbs">
+    <link rel="canonical" href="https://yourdomain.com">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Natural Herbal Powders - Pure Wellness">
+    <meta property="og:description" content="100% natural herbal powders for skin, hair & health">
+    <meta property="og:image" content="./assets/images/og-image.jpg">
+    <meta property="og:type" content="website">
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://checkout.razorpay.com">
+    
+    <!-- Fonts - Optimized Loading -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Poppins:wght@300;400;500;600&family=Lexend:wght@400;500&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5.3.2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./css/main.css">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "OnlineStore",
+      "name": "Herbal Wellness Store",
+      "description": "Natural herbal powders for skin, hair and wellness",
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "INR",
+        "lowPrice": "199",
+        "highPrice": "1199"
+      }
+    }
+ 
+    </script>
+</head>
+<body>
+    
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-content">
+            <h1 class="hero-title" data-aos="fade-up" data-aos-duration="1000">Pure Nature, Pure Wellness</h1>
+            <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">Authentic Herbal Powders for Skin, Hair & Health</p>
+            <button class="cta-button" data-aos="fade-up" data-aos-delay="400" onclick="scrollToProducts()">
+                <span>Shop Natural Remedies</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+        <div class="scroll-indicator" data-aos="fade-up" data-aos-delay="600">
+            <div class="scroll-mouse"></div>
+            <p>Scroll to explore</p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-12 col-md-6 col-lg-3" data-aos="zoom-in" data-aos-duration="600">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>100% Natural Ingredients</h3>
+                        <p>Pure herbs sourced from organic farms across India</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <h3>Traditional Ayurvedic</h3>
+                        <p>Ancient recipes passed down through generations</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="200">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                        <h3>Chemical-Free & Safe</h3>
+                        <p>No harmful additives or preservatives</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="300">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-recycle"></i>
+                        </div>
+                        <h3>Eco-Friendly Packaging</h3>
+                        <p>Sustainable materials for a better tomorrow</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products-section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>
+                    <i class="fas fa-leaf leaf-icon"></i>
+                    Our Natural Collection
+                    <i class="fas fa-leaf leaf-icon"></i>
+                </h2>
+                <p>Handcrafted herbal powders for your wellness journey</p>
+            </div>
+            
+            <div class="row g-4" id="productsContainer">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="benefits-section">
+        <div class="benefits-parallax"></div>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-12 col-md-4" data-aos="fade-up" data-aos-duration="800">
+                    <div class="benefit-stat">
+                        <i class="fas fa-users"></i>
+                        <h3 class="counter" data-target="5000">0</h3>
+                        <p>Happy Customers</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
+                    <div class="benefit-stat">
+                        <i class="fas fa-leaf"></i>
+                        <h3>100%</h3>
+                        <p>Natural Products</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4" data-aos="fade-up" data-aos-duration="800" data-aos-delay="400">
+                    <div class="benefit-stat">
+                        <i class="fas fa-heart"></i>
+                        <h3>Traditional</h3>
+                        <p>Ayurvedic Recipes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Use Section -->
+    <section id="how-to-use" class="how-section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>How to Use Our Products</h2>
+                <p>Simple steps for maximum benefits</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item" data-aos="fade-right" data-aos-duration="700">
+                    <div class="timeline-icon">
+                        <span>1</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Mix</h3>
+                        <p>Take recommended amount and mix with water, milk, or yogurt to form a smooth paste</p>
+                    </div>
+                </div>
+                <div class="timeline-item" data-aos="fade-left" data-aos-duration="700" data-aos-delay="200">
+                    <div class="timeline-icon">
+                        <span>2</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Apply</h3>
+                        <p>Gently apply the mixture to the desired area or consume as directed</p>
+                    </div>
+                </div>
+                <div class="timeline-item" data-aos="fade-right" data-aos-duration="700" data-aos-delay="400">
+                    <div class="timeline-icon">
+                        <span>3</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Experience</h3>
+                        <p>Wait for the specified time and enjoy the natural goodness</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials-section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>What Our Customers Say</h2>
+                <p>Real experiences from real people</p>
+            </div>
+            
+            <div class="testimonials-wrapper">
+                <div class="testimonial-card" data-aos="fade-right" data-aos-duration="700">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"The Skin Glow powder has transformed my complexion! My skin feels so much healthier and radiant after just 2 weeks of use."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">P</div>
+                        <div>
+                            <h4>Priya Sharma</h4>
+                            <span>Mumbai, India</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"Amazing hair powder! My hair fall has reduced significantly and I can see new hair growth. Totally natural and effective."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">R</div>
+                        <div>
+                            <h4>Rahul Verma</h4>
+                            <span>Delhi, India</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card" data-aos="fade-left" data-aos-duration="700" data-aos-delay="400">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"The Wellness Mix has become part of my daily routine. I feel more energetic and my immunity has improved noticeably."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">A</div>
+                        <div>
+                            <h4>Anita Desai</h4>
+                            <span>Bangalore, India</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-12 col-md-4">
+                    <h3>Herbal Wellness Store</h3>
+                    <p>Bringing nature's best to your doorstep. 100% natural, 100% authentic.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <h4>Contact Us</h4>
+                    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                    <p><i class="fas fa-envelope"></i> info@herbalwellness.com</p>
+                    <p><i class="fas fa-location-dot"></i> Mumbai, India</p>
+                </div>
+                <div class="col-12 col-md-4">
+                    <h4>Payment Methods</h4>
+                    <div class="payment-icons">
+                        <i class="fab fa-google-pay"></i>
+                        <i class="fab fa-cc-visa"></i>
+                        <i class="fab fa-cc-mastercard"></i>
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <p class="mt-3 small">Secure payments powered by Razorpay</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Herbal Wellness Store. All rights reserved.</p>
+                <p class="small">Images from Unsplash | Made with <i class="fas fa-heart"></i> for wellness</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Cart Button -->
+    <button class="cart-float-btn" id="cartFloatBtn" aria-label="Shopping Cart">
+        <i class="fas fa-cart-shopping"></i>
+        <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-cart-shopping"></i> Your Cart</h3>
+            <button class="cart-close" id="cartCloseBtn" aria-label="Close Cart">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+        
+        <div class="cart-body" id="cartBody">
+            <div class="cart-empty" id="cartEmpty">
+                <i class="fas fa-leaf"></i>
+                <p>Your herbal wellness journey starts here</p>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+        </div>
+        
+        <div class="cart-footer" id="cartFooter">
+            <div class="cart-total">
+                <span>Subtotal:</span>
+                <span class="total-amount" id="cartSubtotal">₹0</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">
+                <span>Proceed to Checkout</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Checkout Section -->
+    <div class="checkout-overlay" id="checkoutOverlay">
+        <div class="checkout-container">
+            <button class="checkout-close" id="checkoutCloseBtn" aria-label="Close Checkout">
+                <i class="fas fa-xmark"></i>
+            </button>
+            
+            <h2 class="checkout-title">Complete Your Order</h2>
+            
+            <div class="row g-4">
+                <div class="col-12 col-lg-7">
+                    <form id="checkoutForm" novalidate>
+                        <div class="form-section">
+                            <h3>Contact Information</h3>
+                            
+                            <div class="form-group">
+                                <label for="fullName">Full Name <span class="required">*</span></label>
+                                <input type="text" id="fullName" name="fullName" required>
+                                <span class="error-message" id="fullNameError"></span>
+                            </div>
+                            
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="email">Email <span class="required">*</span></label>
+                                        <input type="email" id="email" name="email" required>
+                                        <span class="error-message" id="emailError"></span>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone">Phone Number <span class="required">*</span></label>
+                                        <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required>
+                                        <span class="error-message" id="phoneError"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Delivery Address</h3>
+                            
+                            <div class="form-group">
+                                <label for="address1">Address Line 1 <span class="required">*</span></label>
+                                <input type="text" id="address1" name="address1" placeholder="House No., Street Name" required>
+                                <span class="error-message" id="address1Error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address2">Address Line 2</label>
+                                <input type="text" id="address2" name="address2" placeholder="Landmark, Area (Optional)">
+                            </div>
+                            
+                            <div class="row g-3">
+                                <div class="col-12 col-md-4">
+                                    <div class="form-group">
+                                        <label for="city">City <span class="required">*</span></label>
+                                        <input type="text" id="city" name="city" required>
+                                        <span class="error-message" id="cityError"></span>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-group">
+                                        <label for="state">State <span class="required">*</span></label>
+                                        <select id="state" name="state" required>
+                                            <option value="">Select State</option>
+                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                            <option value="Assam">Assam</option>
+                                            <option value="Bihar">Bihar</option>
+                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                            <option value="Goa">Goa</option>
+                                            <option value="Gujarat">Gujarat</option>
+                                            <option value="Haryana">Haryana</option>
+                                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                            <option value="Jharkhand">Jharkhand</option>
+                                            <option value="Karnataka">Karnataka</option>
+                                            <option value="Kerala">Kerala</option>
+                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                            <option value="Maharashtra">Maharashtra</option>
+                                            <option value="Manipur">Manipur</option>
+                                            <option value="Meghalaya">Meghalaya</option>
+                                            <option value="Mizoram">Mizoram</option>
+                                            <option value="Nagaland">Nagaland</option>
+                                            <option value="Odisha">Odisha</option>
+                                            <option value="Punjab">Punjab</option>
+                                            <option value="Rajasthan">Rajasthan</option>
+                                            <option value="Sikkim">Sikkim</option>
+                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                            <option value="Telangana">Telangana</option>
+                                            <option value="Tripura">Tripura</option>
+                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                            <option value="Uttarakhand">Uttarakhand</option>
+                                            <option value="West Bengal">West Bengal</option>
+                                            <option value="Delhi">Delhi</option>
+                                        </select>
+                                        <span class="error-message" id="stateError"></span>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-group">
+                                        <label for="pincode">PIN Code <span class="required">*</span></label>
+                                        <input type="text" id="pincode" name="pincode" placeholder="600001" maxlength="6" required>
+                                        <span class="error-message" id="pincodeError"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Payment Method</h3>
+                            <div class="payment-methods">
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="upi" checked>
+                                    <span class="payment-label">
+                                        <i class="fab fa-google-pay"></i>
+                                        UPI
+                                    </span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="card">
+                                    <span class="payment-label">
+                                        <i class="fas fa-credit-card"></i>
+                                        Card
+                                    </span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="wallet">
+                                    <span class="payment-label">
+                                        <i class="fas fa-wallet"></i>
+                                        Wallet
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="col-12 col-lg-5">
+                    <div class="order-summary">
+                        <h3>Order Summary</h3>
+                        <div class="summary-items" id="summaryItems"></div>
+                        <div class="summary-totals">
+                            <div class="summary-row">
+                                <span>Subtotal:</span>
+                                <span id="summarySubtotal">₹0</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping:</span>
+                                <span id="summaryShipping">₹50</span>
+                            </div>
+                            <div class="summary-row total-row">
+                                <span>Total:</span>
+                                <span id="summaryTotal">₹0</span>
+                            </div>
+                        </div>
+                        <button type="button" class="pay-btn" id="payBtn" disabled>
+                            <i class="fas fa-lock"></i>
+                            <span>Pay ₹<span id="payAmount">0</span></span>
+                        </button>
+                        <p class="secure-note"><i class="fas fa-shield-halved"></i> Your payment is 100% secure</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Success Modal -->
+    <div class="payment-modal" id="successModal">
+        <div class="payment-modal-content success">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Payment Successful!</h2>
+            <p class="order-id">Order ID: <strong id="successOrderId"></strong></p>
+            <p class="amount-paid">Amount Paid: <strong id="successAmount"></strong></p>
+            <div class="success-info">
+                <p><i class="fas fa-envelope"></i> Order confirmation sent to: <span id="successEmail"></span></p>
+                <p><i class="fas fa-box"></i> We're preparing your herbal products with care</p>
+                <p><i class="fas fa-truck-fast"></i> Expected Delivery: 3-5 business days</p>
+            </div>
+            <button class="modal-btn primary" onclick="closeSuccessModal()">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- Payment Failure Modal -->
+    <div class="payment-modal" id="failureModal">
+        <div class="payment-modal-content failure">
+            <div class="modal-icon">
+                <i class="fas fa-xmark-circle"></i>
+            </div>
+            <h2>Payment Failed</h2>
+            <p class="error-reason">Reason: <span id="failureReason"></span></p>
+            <p>Don't worry, your cart is still saved!</p>
+            <div class="modal-actions">
+                <button class="modal-btn primary" onclick="retryPayment()">Retry Payment</button>
+                <button class="modal-btn secondary" onclick="closeFailureModal()">Contact Support</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- Scripts -->
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
+    <!-- AOS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Razorpay -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="./js/animations.js"></script>
+    <script src="./js/cart.js"></script>
+    <script src="./js/checkout.js"></script>
+    <script src="./js/payment.js"></script>
+    <script src="./js/app.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+</body>
+</html>
