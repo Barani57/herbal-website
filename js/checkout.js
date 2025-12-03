@@ -7,7 +7,7 @@ class Checkout {
     constructor() {
         this.formData = {};
         this.isValid = false;
-        this.backendUrl = "http://127.0.0.1:8000"; // FastAPI backend
+        this.backendUrl = "https://web-production-761bd.up.railway.app/"; // FastAPI backend
         this.initEventListeners();
     }
 
