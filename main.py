@@ -118,6 +118,7 @@ def verify_payment(req: VerifyPaymentRequest):
         if expected_signature != req.razorpay_signature:
             raise HTTPException(status_code=400, detail="Invalid payment signature")
 
+   
         return {"status": "success"}
     except HTTPException:
         raise
