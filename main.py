@@ -26,7 +26,6 @@ app = FastAPI()
 # CORS - allow all during local dev for simplicity
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
     allow_origins=[
         "https://herbal-website-two.vercel.app",
     ],
