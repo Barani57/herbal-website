@@ -47,7 +47,7 @@ const products = [
         id: 'wellness-mix',
         name: 'Wellness Herbal Mix',
         description: 'Daily wellness booster with ashwagandha, moringa, and tulsi for immunity and vitality.',
-        image: 'https://images.unsplash.com/photo-1599940778384-1e9e1cf23f42?w=600&h=600&fit=crop&q=80',
+        image: 'https://images.unsplash.com/photo-1516715043227-1cdf27bcd09a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         benefits: [
             { icon: 'fa-shield-heart', text: 'Boosts immunity' },
             { icon: 'fa-heart-pulse', text: 'Improves digestion' },
@@ -60,7 +60,91 @@ const products = [
             { size: '250g', price: 649, sku: 'WM-250' },
             { size: '500g', price: 1199, sku: 'WM-500' }
         ]
-    }
+    },
+
+    {
+            id: 'herbal-hair-oil',
+            name: 'Herbal Hair Oil',
+            description: 'Natural blend for hair growth, scalp nourishment, and reduced hair fall.',
+            image: 'assets/images/HairOil.png',
+            benefits: [
+                { icon: 'fa-leaf', text: 'Promotes hair growth' },
+                { icon: 'fa-droplet', text: 'Deep scalp ' },
+            ],
+            ingredients: ['Coconut Oil', 'Castor Oil', 'Amla', 'Bhringraj', 'Fenugreek'],
+            usage: 'Apply a small amount to the scalp and massage gently. Leave for 1 hour before washing.',
+            sizes: [
+                { size: '100ml', price: 249, sku: 'HO-100' },
+                { size: '200ml', price: 399, sku: 'HO-200' }
+            ]
+        },
+        {
+            id: 'herbal-hair-pack',
+            name: 'Herbal Hair Pack',
+            description: 'Strengthening herbal formulation for smooth, shiny, and strong hair.',
+            image: 'assets/images/HairPack.png',
+            benefits: [
+                { icon: 'fa-leaf', text: 'Strengthens hair roots' },
+                { icon: 'fa-sparkles', text: 'Adds natural shine' },
+                { icon: 'fa-droplet', text: 'Reduces dandruff' }
+            ],
+            ingredients: ['Amla', 'Shikakai', 'Brahmi', 'Reetha'],
+            usage: 'Mix with water or curd and apply to scalp and hair. Leave for 20 minutes.',
+            sizes: [
+                { size: '100g', price: 249, sku: 'HP-100' }
+            ]
+        },
+        {
+            id: 'herbal-hair-dye',
+            name: 'Herbal Hair Dye',
+            description: 'Chemical-free natural hair dye for dark and healthy hair.',
+            image: 'assets/images/HairPack.png',
+            benefits: [
+                { icon: 'fa-palette', text: 'Natural coloring' },
+                { icon: 'fa-shield-heart', text: 'No chemicals' },
+                { icon: 'fa-leaf', text: 'Strengthens the hair' }
+            ],
+            ingredients: ['Henna', 'Indigo', 'Amla', 'Bhringraj'],
+            usage: 'Mix with warm water, apply evenly to hair, and leave for 1–2 hours.',
+            sizes: [
+                { size: '100g', price: 299, sku: 'HD-100' }
+            ]
+        },
+        {
+            id: 'nalangu-maavu-male',
+            name: 'Nalangu Maavu (Male)',
+            description: 'Traditional herbal bath powder for men—skin cleansing, freshness, and glow.',
+            image: 'assets/images/NalanguMaavu_Male.png',
+            benefits: [
+                { icon: 'fa-sun', text: 'Removes tan' },
+                { icon: 'fa-leaf', text: 'Chemical-free skin' },
+            ],
+            ingredients: ['Green Gram', 'Wild Turmeric', 'Rose Petal Powder', 'Kasturi Manjal'],
+            usage: 'Mix with water or milk and apply all over the body. Rinse after 5 minutes.',
+            sizes: [
+                { size: '100g', price: 169, sku: 'NM-M-100' },
+                { size: '250g', price: 299, sku: 'NM-M-250' }
+            ]
+        },
+        {
+            id: 'nalangu-maavu-female',
+            name: 'Nalangu Maavu (Female)',
+            description: 'Ayurvedic herbal bath powder for glowing, soft, and healthy skin.',
+            image: 'assets/images/NalanguMaavu_Female.png',
+            benefits: [
+                { icon: 'fa-sparkles', text: 'Enhances glow' },
+                { icon: 'fa-flower', text: 'Softens skin' },
+                { icon: 'fa-leaf', text: '100% natural ingredients' }
+            ],
+            ingredients: ['Wild Turmeric', 'Rose', 'Green Gram', 'Sandalwood'],
+            usage: 'Mix with rose water/milk and apply on body. Wash after 5 minutes.',
+            sizes: [
+                { size: '100g', price: 125, sku: 'NM-F-100' },
+                { size: '250g', price: 250, sku: 'NM-F-250' },
+                { size: '500g', price: 450, sku: 'NM-F-500' },
+                { size: '1kg', price: 800, sku: 'NM-F-1K' }
+            ]
+        }
 ];
 
 // ============================================
@@ -74,8 +158,8 @@ function renderProducts() {
         const defaultSize = product.sizes[0];
         
         return `
-            <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-duration="800">
-                <div class="product-card">
+        <div class="col">
+        <div class="product-card">
                     <div class="product-image-container">
                         <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
                         <div class="product-badge">100% Natural</div>

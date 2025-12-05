@@ -187,7 +187,7 @@ a {
 .scroll-indicator {
     position: absolute;
     bottom: var(--space-2xl);
-    left: 50%;
+    left: 47%;
     transform: translateX(-50%);
     z-index: 2;
     text-align: center;
@@ -1717,4 +1717,177 @@ a {
     to {
         transform: rotate(360deg);
     }
+}
+
+/* ======== MOBILE PRODUCT CARD OPTIMIZATION (2-COL GRID) ======== */
+@media (max-width: 576px) {
+
+    /* tighter spacing between cards */
+    #products .row {
+        row-gap: 12px;
+    }
+
+    .product-badge {
+        top: 6px;
+        right: 6px;
+        padding: 3px 8px;
+        font-size: 0.65rem;
+        border-radius: 999px;
+    }
+
+    .product-card {
+        border-radius: 10px;
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+    }
+
+    /* Smaller product image */
+    .product-image-container {
+        height: 130px !important; /* was 280 */
+    }
+
+    /* Reduce padding inside the card */
+    .product-info {
+        padding: 8px 8px 10px !important;
+    }
+
+    /* Title smaller */
+    .product-name {
+        font-size: 0.9rem !important;
+        margin-bottom: 4px;
+        line-height: 1.25;
+    }
+
+    /* Hide long description on mobile (keeps card short) */
+    .product-description {
+        display: none;
+    }
+
+    /* Benefits – only first two, smaller chips */
+    .product-benefits {
+        margin-bottom: 6px;
+        gap: 4px;
+    }
+
+    .product-benefits .benefit-tag:nth-child(n+3) {
+        display: none; /* show only first 2 */
+    }
+
+    .benefit-tag {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+    }
+
+    /* Size section tighter */
+    .product-sizes {
+        margin-bottom: 6px;
+    }
+
+    .product-sizes label {
+        font-size: 0.75rem;
+        margin-bottom: 4px;
+    }
+
+    .size-option {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .size-label {
+        padding: 4px 2px !important;
+        border-radius: 6px;
+    }
+
+    .size-text {
+        font-size: 0.7rem;
+    }
+
+    .size-price {
+        font-size: 0.8rem;
+        margin-top: 2px;
+    }
+
+    /* Quantity section smaller */
+    .quantity-selector {
+        margin-bottom: 6px;
+        gap: 6px;
+    }
+
+    .quantity-selector label {
+        font-size: 0.75rem;
+    }
+
+    .qty-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+        border-width: 1px;
+    }
+
+    .qty-input {
+        width: 34px;
+        height: 24px;
+        font-size: 0.8rem;
+    }
+
+    /* Shrink Add to Cart button */
+    .add-to-cart-btn {
+        font-size: 0.8rem;
+        padding: 6px;
+        border-radius: 6px;
+        margin-top: 4px;
+    }
+
+    .add-to-cart-btn i {
+        font-size: 0.8rem;
+    }
+
+    .scroll-indicator {
+    position: absolute;
+    bottom: var(--space-2xl);
+    left: 40%;
+    transform: translateX(-50%);
+    z-index: 2;
+    text-align: center;
+    color: white;
+    opacity: 0.8;
+    }
+
+  /* ===== FEATURE CARDS – MOBILE ===== */
+    .features-section {
+        padding: var(--space-2xl) 0 var(--space-xl);
+    }
+
+    .features-section .row {
+        row-gap: 12px;
+    }
+
+    .feature-card {
+        padding: 12px 10px;
+        border-radius: 10px;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .feature-icon {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 10px;
+    }
+
+    .feature-icon i {
+        font-size: 1.4rem;
+    }
+
+    .feature-card h3 {
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+    }
+
+    .feature-card p {
+        font-size: 0.78rem;
+        line-height: 1.4;
+    }
+
+
+
 }
