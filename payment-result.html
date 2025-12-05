@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Result - Herbal Wellness Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+<body style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#F5F3EE;">
+  <div class="payment-modal-content success" style="max-width:420px;width:90%;">
+    <div class="modal-icon success">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <h2>Checking Payment Status...</h2>
+    <p id="statusMessage">Please wait while we confirm your payment.</p>
+    <p class="order-id">Transaction ID: <span id="txnId"></span></p>
+    <button class="modal-btn primary" id="backHomeBtn" style="margin-top:16px;">
+      Back to Home
+    </button>
+  </div>
+
+  <script src="https://kit.fontawesome.com/a2b1c3d4e5.js" crossorigin="anonymous"></script>
+  <script>
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    const txnId = getQueryParam("merchantTransactionId");
+    const txnSpan = document.getElementById("txnId");
+    const statusEl = document.getElementById("statusMessage");
+    const backBtn = document.getElementById("backHomeBtn");
+
+    if (txnSpan && txnId) {
+      txnSpan.textContent = txnId;
+    }
+
+    backBtn.addEventListener("click", () => {
+      window.location.href = "/";
+    });
+
+    if (txnId) {
+      fetch(`/api/phonepe/status?merchantTransactionId=${encodeURIComponent(txnId)}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log("Status response:", data);
+          if (data && data.code === "SUCCESS" && data.data && data.data.state === "COMPLETED") {
+            statusEl.textContent = "Payment successful! Thank you for your order.";
+          } else if (data && data.data && data.data.state === "PENDING") {
+            statusEl.textContent = "Payment is pending. If amount is debited, it will be updated shortly.";
+          } else {
+            statusEl.textContent =
+              "Payment failed or cancelled. If amount was debited, please contact support.";
+          }
+        })
+        .catch(err => {
+          console.error("Status check error:", err);
+          statusEl.textContent = "Unable to confirm payment at the moment.";
+        });
+    } else {
+      statusEl.textContent = "Missing transaction ID.";
+    }
+  </script>
+</body>
+</html>

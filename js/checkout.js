@@ -7,7 +7,7 @@ class Checkout {
     constructor() {
         this.formData = {};
         this.isValid = false;
-        this.backendUrl = "https://web-production-761bd.up.railway.app/"; // FastAPI backend
+        this.backendUrl = "";
         this.initEventListeners();
     }
 
@@ -220,6 +220,7 @@ class Checkout {
     }
 
     // ---- PAYMENT LOGIC (FastAPI + Razorpay) ----
+// ---- PAYMENT LOGIC (PhonePe) ----
     async processPayment() {
         if (!this.checkFormValidity()) {
             alert('Please fill in all required fields correctly');
@@ -231,106 +232,59 @@ class Checkout {
 
         this.formData = formData;
 
+        const payBtn = document.getElementById('payBtn');
+
         try {
-            // 1) Create order on backend
-            const orderRes = await fetch(`${this.backendUrl}/payments/order`, {
+            if (payBtn) {
+                payBtn.disabled = true;
+                payBtn.classList.add('loading');
+            }
+
+            // Call our PhonePe backend
+            const resp = await fetch('/api/phonepe/pay', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     amount: total,
-                    currency: 'INR',
-                    receipt: `herbal_${Date.now()}`,
-                    customerName: formData.fullName,
-                    customerEmail: formData.email,
-                    customerPhone: formData.phone
+                    fullName: formData.fullName,
+                    phone: formData.phone,
+                    email: formData.email
                 })
             });
 
-            if (!orderRes.ok) {
-                console.error('Order create failed:', await orderRes.text());
-                alert('Unable to create payment order. Please try again.');
+            if (!resp.ok) {
+                const errText = await resp.text();
+                console.error('PhonePe pay error:', errText);
+                alert('Unable to initiate payment. Please try again.');
+                if (payBtn) {
+                    payBtn.disabled = false;
+                    payBtn.classList.remove('loading');
+                }
                 return;
             }
 
-            const orderData = await orderRes.json();
-            const { key, orderId, amount, currency } = orderData;
+            const data = await resp.json();
+            console.log('PhonePe pay data:', data);
 
-            // 2) Open Razorpay checkout
-            const options = {
-                key: key,
-                amount: amount,      // in paise
-                currency: currency,
-                name: 'Herbal Wellness Store',
-                description: 'Order payment',
-                image: './assets/logo.png', // adjust if needed
-                order_id: orderId,
-                handler: async (response) => {
-                    // 3) Verify payment on backend
-                    try {
-                        const verifyRes = await fetch(`${this.backendUrl}/payments/verify`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                razorpay_order_id: response.razorpay_order_id,
-                                razorpay_payment_id: response.razorpay_payment_id,
-                                razorpay_signature: response.razorpay_signature
-                            })
-                        });
-
-                        if (!verifyRes.ok) {
-                            console.error('Verification failed:', await verifyRes.text());
-                            alert('Payment verification failed. Please contact support.');
-                            return;
-                        }
-
-                        const verifyData = await verifyRes.json();
-                        if (verifyData.status === 'success') {
-                            this.handlePaymentSuccess(response, formData, total, orderId);
-                        } else {
-                            this.handlePaymentFailure({
-                                description: 'Verification failed. Please try again.'
-                            });
-                        }
-                    } catch (err) {
-                        console.error('Verification error:', err);
-                        this.handlePaymentFailure({
-                            description: 'Verification error. Please try again.'
-                        });
-                    }
-                },
-                prefill: {
-                    name: formData.fullName,
-                    email: formData.email,
-                    contact: formData.phone
-                },
-                notes: {
-                    address: `${formData.address1}, ${formData.address2 || ''}, ${formData.city}, ${formData.state} - ${formData.pincode}`
-                },
-                theme: {
-                    color: '#2D5F3F'
-                },
-                method: {
-                    card: true,
-                    upi: false,
-                    wallet: false,
-                    netbanking: false
+            if (!data.redirectUrl) {
+                alert('No redirect URL returned from payment gateway.');
+                if (payBtn) {
+                    payBtn.disabled = false;
+                    payBtn.classList.remove('loading');
                 }
-            };
+                return;
+            }
 
-            const rzp = new Razorpay(options);
+            // Redirect user to PhonePe hosted checkout page
+            window.location.href = data.redirectUrl;
 
-            rzp.on('payment.failed', (response) => {
-                this.handlePaymentFailure(response.error || response);
-            });
-
-            rzp.open();
         } catch (err) {
-            console.error('Error during payment init:', err);
+            console.error('Error during PhonePe payment init:', err);
             alert('Unable to initiate payment. Please try again.');
+            if (payBtn) {
+                payBtn.disabled = false;
+                payBtn.classList.remove('loading');
+            }
         }
     }
 

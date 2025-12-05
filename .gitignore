@@ -1,14 +1,50 @@
-__pycache__/
-*.pyc
+# -------------------------
+# Node / JavaScript
+# -------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json.*backup
 
-.env
+# Vercel local metadata
+.vercel/
+
+# Build / cache (if you add bundlers later)
+dist/
+build/
+.cache/
+.next/
+out/
+
+# -------------------------
+# Python leftovers
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+.eggs/
+.env/
+.venv/
 venv/
 env/
-env
-.venv/
 
-.vscode/
-.idea/
-
+# -------------------------
+# OS / Editor junk
+# -------------------------
 .DS_Store
 Thumbs.db
+
+# VS Code / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
