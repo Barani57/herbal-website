@@ -32,6 +32,7 @@ __pycache__/
 .venv/
 venv/
 env/
+.env
 
 # -------------------------
 # OS / Editor junk
@@ -48,3 +49,4 @@ Thumbs.db
 # Logs
 *.log
 logs/
+ 
