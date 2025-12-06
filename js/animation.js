@@ -41,6 +41,26 @@ document.addEventListener('DOMContentLoaded', () => {
       scrub: 1.5
     }
   });
+  
+  gsap.to('.hero-visual', {
+    y: 300,
+    scrollTrigger: {
+      trigger: '.hero-section',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 1.5
+    }
+  });
+  
+  gsap.to('.hero-features', {
+    y: 100,
+    scrollTrigger: {
+      trigger: '.hero-section',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 1.5
+    }
+  });
 
   // Hero CTA buttons
   gsap.from('.hero-cta', {

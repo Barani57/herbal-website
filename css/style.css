@@ -485,6 +485,65 @@ body {
     text-transform: uppercase;
 }
 
+.floating-leaves {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.floating-leaves i {
+  position: absolute;
+  font-size: 1.8rem;
+  color: rgba(255, 255, 255, 0.35); /* Very subtle white */
+  opacity: 1;
+  filter: drop-shadow(0 2px 4px rgba(26, 46, 31, 0.2));
+}
+
+/* Only 4 leaves for cleaner look - positioned at corners */
+.leaf-1 {
+    top: 25%;
+    left: 21%;
+    font-size: 1.5rem;
+    animation: gentleFloat 5s ease-in-out infinite;
+}
+
+.leaf-2 {
+  top: 24%;
+  right: 20%;
+  font-size: 1.6rem;
+  animation: gentleFloat 6s ease-in-out infinite 1s;
+}
+
+.leaf-3 {
+  bottom: 18%;
+  left: 22%;
+  font-size: 1.4rem;
+  animation: gentleFloat 5.5s ease-in-out infinite 2s;
+}
+
+.leaf-4 {
+  bottom: 20%;
+  right: 18%;
+  font-size: 1.7rem;
+  animation: gentleFloat 6.5s ease-in-out infinite 1.5s;
+}
+
+/* Remove leaf-5 and leaf-6 from your HTML */
+
+/* Subtle animation - just floating up and down */
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(-12px) rotate(10deg);
+    opacity: 0.5;
+  }
+}
+
+
 .hero-main {
     flex: 1;
     display: flex;
@@ -781,6 +840,172 @@ body {
     background: var(--sage-light);
     color: var(--forest-deep);
     border-color: var(--sage-light);
+}
+
+
+
+/* animated bg */
+/* Enhanced Animated Hero Background */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Animated Gradient Mesh */
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  animation: meshMove 20s ease-in-out infinite alternate;
+}
+
+/* Floating Herbal Elements */
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+
+  background-size: 60px 60px;
+  animation: floatBackground 30s linear infinite;
+  opacity: 0.5;
+}
+
+/* Animated Herbal Leaves Background */
+.hero-leaves-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-leaves-bg i {
+  position: absolute;
+  font-size: 3rem;
+  color: var(--sage);
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.hero-leaves-bg .bg-leaf-1 {
+  top: 10%;
+  left: 5%;
+  animation: driftLeaf 25s ease-in-out infinite, spin 15s linear infinite;
+}
+
+.hero-leaves-bg .bg-leaf-2 {
+  top: 30%;
+  right: 8%;
+  font-size: 4rem;
+  animation: driftLeaf 30s ease-in-out infinite 5s, spin 20s linear infinite reverse;
+}
+
+.hero-leaves-bg .bg-leaf-3 {
+  bottom: 15%;
+  left: 15%;
+  font-size: 3.5rem;
+  animation: driftLeaf 28s ease-in-out infinite 10s, spin 18s linear infinite;
+}
+
+.hero-leaves-bg .bg-leaf-4 {
+  bottom: 25%;
+  right: 20%;
+  animation: driftLeaf 32s ease-in-out infinite 3s, spin 22s linear infinite reverse;
+}
+
+.hero-leaves-bg .bg-leaf-5 {
+  top: 50%;
+  left: 40%;
+  font-size: 2.5rem;
+  animation: driftLeaf 26s ease-in-out infinite 7s, spin 16s linear infinite;
+}
+
+/* Wave Animation for Background */
+.hero-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background: linear-gradient(180deg, transparent 0%, var(--mint-soft) 100%);
+  clip-path: polygon(
+    0% 60%,
+    10% 55%,
+    20% 60%,
+    30% 55%,
+    40% 60%,
+    50% 50%,
+    60% 60%,
+    70% 55%,
+    80% 60%,
+    90% 55%,
+    100% 60%,
+    100% 100%,
+    0% 100%
+  );
+  animation: waveMove 8s ease-in-out infinite;
+  opacity: 0.3;
+}
+
+/* Keyframe Animations */
+@keyframes meshMove {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(50px, 50px) rotate(5deg);
+  }
+}
+
+@keyframes floatBackground {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-60px);
+  }
+}
+
+@keyframes driftLeaf {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(30px, -40px) rotate(90deg);
+  }
+  50% {
+    transform: translate(-20px, -80px) rotate(180deg);
+  }
+  75% {
+    transform: translate(40px, -50px) rotate(270deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes waveMove {
+  0%, 100% {
+    clip-path: polygon(
+      0% 60%, 10% 55%, 20% 60%, 30% 55%, 40% 60%, 50% 50%,
+      60% 60%, 70% 55%, 80% 60%, 90% 55%, 100% 60%,
+      100% 100%, 0% 100%
+    );
+  }
+  50% {
+    clip-path: polygon(
+      0% 55%, 10% 60%, 20% 55%, 30% 60%, 40% 55%, 50% 60%,
+      60% 55%, 70% 60%, 80% 55%, 90% 60%, 100% 55%,
+      100% 100%, 0% 100%
+    );
+  }
 }
 
 

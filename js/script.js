@@ -308,7 +308,7 @@ function renderProducts() {
               </div>
               <div class="product-price-group">
                 <div class="product-price" data-price-display>
-                  ₹${basePrice}<small> incl. GST</small>
+                  ₹${basePrice}<small></small>
                 </div>
                 <div class="cart-actions">
   <button class="btn-add-cart" data-add-to-cart>
@@ -352,7 +352,7 @@ function attachProductEvents() {
                 btn.classList.add('active');
 
                 const price = btn.getAttribute('data-price');
-                priceDisplay.innerHTML = `₹${price}<small> incl. GST</small>`;
+                priceDisplay.innerHTML = `₹${price}<small></small>`;
 
                 syncFromCart();
             });
