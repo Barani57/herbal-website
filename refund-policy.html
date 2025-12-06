@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Policy - Aazhi Products</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="./assets/logo.png">
+    <style>
+        :root {
+            --forest-deep: #1a2e1f;
+            --forest: #243528;
+            --sage-dark: #3d5a3c;
+            --sage: #5a7c52;
+            --sage-light: #7a9970;
+            --mint: #a8c5a0;
+            --mint-soft: #d4e5cf;
+            --cream: #f8f6f1;
+            --ivory: #fffef9;
+            --gold: #c9a227;
+            --gold-soft: #e8d48a;
+            --font-display: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --shadow-sm: 0 2px 8px rgba(26, 46, 31, 0.08);
+            --shadow-md: 0 4px 20px rgba(26, 46, 31, 0.12);
+            --shadow-lg: 0 8px 40px rgba(26, 46, 31, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--cream);
+            color: var(--forest-deep);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .header-section {
+            text-align: center;
+            padding: 3rem 0 2rem;
+            background: linear-gradient(160deg, var(--ivory) 0%, var(--cream) 40%, var(--mint-soft) 100%);
+            border-bottom: 1px solid var(--mint);
+        }
+
+        .header-section h1 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--forest-deep);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-section p {
+            font-size: 1rem;
+            color: var(--sage);
+            font-weight: 500;
+        }
+
+        .policy-section {
+            background: var(--ivory);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .policy-section h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--forest-deep);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--mint);
+        }
+
+        .policy-section h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--sage-dark);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .policy-section p {
+            margin-bottom: 1rem;
+            color: var(--forest);
+            font-size: 0.95rem;
+        }
+
+        .policy-section ul {
+            margin: 1rem 0 1.5rem 1.5rem;
+            color: var(--forest);
+        }
+
+        .policy-section li {
+            margin-bottom: 0.75rem;
+            line-height: 1.7;
+        }
+
+        .policy-section strong {
+            color: var(--forest-deep);
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: var(--mint-soft);
+            border-left: 4px solid var(--sage);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: var(--forest-deep);
+            font-weight: 500;
+        }
+
+        .contact-info {
+            background: var(--cream);
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .contact-info p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--sage);
+            font-size: 0.9rem;
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.75rem 2rem;
+            background: var(--sage);
+            color: var(--ivory);
+            text-decoration: none;
+            border-radius: 25px;
+            font-family: var(--font-display);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-home:hover {
+            background: var(--sage-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        @media (max-width: 768px) {
+            .header-section h1 {
+                font-size: 2rem;
+            }
+
+            .policy-section {
+                padding: 1.5rem;
+            }
+
+            .policy-section h2 {
+                font-size: 1.6rem;
+            }
+
+            .policy-section h3 {
+                font-size: 1.15rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <h1>Refund & Return Policy</h1>
+        <p>Customer Satisfaction Guaranteed | Aazhi Products</p>
+    </div>
+
+    <div class="container">
+        <section class="policy-section">
+            <h2>Refund & Return Policy</h2>
+            <p><strong>Effective Date:</strong> December 2025</p>
+            <p>At Aazhi, customer satisfaction is our priority. We stand behind the quality of our handcrafted herbal products. If you're not completely satisfied with your purchase, we're here to help.</p>
+
+            <h3>1. Return Eligibility</h3>
+            <p>Returns and refunds are accepted under the following conditions:</p>
+            <ul>
+                <li>Products must be returned within <strong>7 days</strong> of delivery</li>
+                <li>Items must be unused, unopened, and in original packaging with all seals intact</li>
+                <li>Products must not show signs of use, damage, or tampering</li>
+                <li>Return request must be initiated by contacting our customer support team</li>
+            </ul>
+
+            <h3>2. Non-Returnable Items</h3>
+            <p>Due to the nature of our herbal products, the following cannot be returned:</p>
+            <ul>
+                <li>Opened or used products (for hygiene and safety reasons)</li>
+                <li>Products with broken seals or damaged packaging</li>
+                <li>Products purchased during promotional sales or clearance events (unless defective)</li>
+                <li>Customized or personalized orders</li>
+            </ul>
+
+            <h3>3. Damaged or Defective Products</h3>
+            <p>If you receive a damaged, defective, or incorrect product:</p>
+            <ul>
+                <li>Contact us within <strong>48 hours</strong> of delivery with photographic evidence</li>
+                <li>We will arrange for a replacement or full refund at no additional cost</li>
+                <li>Return shipping costs will be borne by Aazhi for defective/damaged items</li>
+            </ul>
+
+            <h3>4. Refund Process</h3>
+            <p>Once we receive and inspect your returned product:</p>
+            <ul>
+                <li>Approved refunds will be processed within <strong>5-7 business days</strong></li>
+                <li>Refunds will be credited to your original payment method</li>
+                <li>You will receive an email confirmation once the refund is initiated</li>
+                <li>Bank processing times may vary (typically 5-10 business days)</li>
+            </ul>
+
+            <h3>5. Return Shipping</h3>
+            <p>For standard returns (non-defective products), customers are responsible for return shipping costs. We recommend using a trackable shipping service.</p>
+
+            <h3>6. Exchanges</h3>
+            <p>We currently offer replacements for damaged or defective items only. For different product variants or sizes, please place a new order.</p>
+
+            <h3>7. Cancellations</h3>
+            <p>Order cancellations are accepted:</p>
+            <ul>
+                <li>Before order dispatch: Full refund with no charges</li>
+                <li>After dispatch: Subject to return policy terms</li>
+                <li>Contact us immediately if you wish to cancel your order</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p><strong>Important:</strong> Herbal products are natural formulations. Results may vary based on individual body chemistry. Please read product descriptions and ingredients carefully before purchasing.</p>
+            </div>
+
+            <div class="contact-info">
+                <p><strong>To initiate a return or refund:</strong></p>
+                <p>Email: aazhiproducts24@gmail.com</p>
+                <p>Phone: +918883311488</p>
+                <p>WhatsApp: +918883311488</p>
+                <p>Business Hours: Monday - Saturday, 10:00 AM - 6:00 PM IST</p>
+                <p><strong>Include:</strong> Order number, reason for return, and photos if applicable.</p>
+            </div>
+        </section>
+
+        <div class="footer">
+            <p><strong>Aazhi Products</strong></p>
+            <p>Handcrafted with love in Tamil Nadu</p>
+            <p>Last Updated: December 2025</p>
+            <a href="index.html" class="back-home">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

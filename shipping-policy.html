@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Policy - Aazhi Products</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="./assets/logo.png">
+    <style>
+        :root {
+            --forest-deep: #1a2e1f;
+            --forest: #243528;
+            --sage-dark: #3d5a3c;
+            --sage: #5a7c52;
+            --sage-light: #7a9970;
+            --mint: #a8c5a0;
+            --mint-soft: #d4e5cf;
+            --cream: #f8f6f1;
+            --ivory: #fffef9;
+            --gold: #c9a227;
+            --gold-soft: #e8d48a;
+            --font-display: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --shadow-sm: 0 2px 8px rgba(26, 46, 31, 0.08);
+            --shadow-md: 0 4px 20px rgba(26, 46, 31, 0.12);
+            --shadow-lg: 0 8px 40px rgba(26, 46, 31, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--cream);
+            color: var(--forest-deep);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .header-section {
+            text-align: center;
+            padding: 3rem 0 2rem;
+            background: linear-gradient(160deg, var(--ivory) 0%, var(--cream) 40%, var(--mint-soft) 100%);
+            border-bottom: 1px solid var(--mint);
+        }
+
+        .header-section h1 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--forest-deep);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-section p {
+            font-size: 1rem;
+            color: var(--sage);
+            font-weight: 500;
+        }
+
+        .policy-section {
+            background: var(--ivory);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .policy-section h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--forest-deep);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--mint);
+        }
+
+        .policy-section h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--sage-dark);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .policy-section p {
+            margin-bottom: 1rem;
+            color: var(--forest);
+            font-size: 0.95rem;
+        }
+
+        .policy-section ul {
+            margin: 1rem 0 1.5rem 1.5rem;
+            color: var(--forest);
+        }
+
+        .policy-section li {
+            margin-bottom: 0.75rem;
+            line-height: 1.7;
+        }
+
+        .policy-section strong {
+            color: var(--forest-deep);
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: var(--mint-soft);
+            border-left: 4px solid var(--sage);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: var(--forest-deep);
+            font-weight: 500;
+        }
+
+        .contact-info {
+            background: var(--cream);
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .contact-info p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--sage);
+            font-size: 0.9rem;
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.75rem 2rem;
+            background: var(--sage);
+            color: var(--ivory);
+            text-decoration: none;
+            border-radius: 25px;
+            font-family: var(--font-display);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-home:hover {
+            background: var(--sage-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        @media (max-width: 768px) {
+            .header-section h1 {
+                font-size: 2rem;
+            }
+
+            .policy-section {
+                padding: 1.5rem;
+            }
+
+            .policy-section h2 {
+                font-size: 1.6rem;
+            }
+
+            .policy-section h3 {
+                font-size: 1.15rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <h1>Shipping & Delivery Policy</h1>
+        <p>Safe & Timely Delivery | Aazhi Products</p>
+    </div>
+
+    <div class="container">
+        <section class="policy-section">
+            <h2>Shipping & Delivery Policy</h2>
+            <p><strong>Effective Date:</strong> December 2025</p>
+            <p>At Aazhi, we ensure your traditional herbal products are carefully packaged and delivered to your doorstep in perfect condition. Here's everything you need to know about our shipping process.</p>
+
+            <h3>1. Shipping Coverage</h3>
+            <p>We currently ship to:</p>
+            <ul>
+                <li><strong>All locations within India</strong></li>
+                <li>Pan-India delivery including metro cities, tier-2, and tier-3 cities</li>
+                <li>Remote areas may experience extended delivery times</li>
+                <li>International shipping: Currently unavailable (coming soon)</li>
+            </ul>
+
+            <h3>2. Processing Time</h3>
+            <p>Orders are processed with care:</p>
+            <ul>
+                <li>Order processing: <strong>1-2 business days</strong> (excluding weekends and holidays)</li>
+                <li>Orders placed before 2:00 PM IST are processed the same day</li>
+                <li>Orders placed after 2:00 PM IST are processed the next business day</li>
+                <li>During festive seasons or promotional sales, processing may take 2-3 business days</li>
+            </ul>
+
+            <h3>3. Delivery Time</h3>
+            <p>Estimated delivery timelines after order dispatch:</p>
+            <ul>
+                <li><strong>Metro Cities:</strong> 3-5 business days</li>
+                <li><strong>Tier-2 Cities:</strong> 5-7 business days</li>
+                <li><strong>Tier-3 Cities & Remote Areas:</strong> 7-10 business days</li>
+            </ul>
+            <p>Please note: These are estimated timelines and may vary due to courier partner delays, weather conditions, or unforeseen circumstances.</p>
+
+            <h3>4. Shipping Charges</h3>
+            <ul>
+                <li><strong>Free Shipping:</strong> On orders above ₹499</li>
+                <li><strong>Standard Shipping:</strong> ₹50 for orders below ₹499</li>
+                <li>Shipping charges are calculated at checkout based on your location and cart value</li>
+            </ul>
+
+            <h3>5. Order Tracking</h3>
+            <p>Stay updated on your order:</p>
+            <ul>
+                <li>You will receive a tracking number via email and SMS once your order is shipped</li>
+                <li>Track your order in real-time using the tracking link provided</li>
+                <li>For tracking issues, contact our customer support team</li>
+            </ul>
+
+            <h3>6. Packaging</h3>
+            <p>We care about sustainability:</p>
+            <ul>
+                <li>All products are securely packaged to prevent damage during transit</li>
+                <li>We use eco-friendly and recyclable packaging materials wherever possible</li>
+                <li>Each order includes product information and usage instructions</li>
+            </ul>
+
+            <h3>7. Delivery Attempts</h3>
+            <ul>
+                <li>Courier partners typically make 2-3 delivery attempts</li>
+                <li>If delivery fails, the package will be returned to us</li>
+                <li>Return-to-origin orders will be refunded after deducting shipping charges</li>
+                <li>Ensure accurate delivery address and contact information to avoid delays</li>
+            </ul>
+
+            <h3>8. Undelivered or Lost Packages</h3>
+            <p>If your order is marked as delivered but not received:</p>
+            <ul>
+                <li>Check with neighbors, building security, or alternative delivery locations</li>
+                <li>Contact us within 48 hours with your order details</li>
+                <li>We will investigate with our courier partners and arrange a replacement or refund</li>
+            </ul>
+
+            <h3>9. Address Changes</h3>
+            <p>Address modifications are only possible before order dispatch. Once shipped, delivery addresses cannot be changed. Contact us immediately if you need to update your address.</p>
+
+            <h3>10. Holidays and Special Circumstances</h3>
+            <p>During national holidays, festivals, or extreme weather conditions, deliveries may be delayed. We appreciate your patience and will keep you informed of any significant delays.</p>
+
+            <div class="highlight-box">
+                <p><strong>Peak Season Notice:</strong> During festivals, sales events, or monsoon season, delivery timelines may be extended. We appreciate your patience and understanding.</p>
+            </div>
+
+            <div class="contact-info">
+                <p><strong>Shipping Support:</strong></p>
+                <p>Email: aazhiproducts24@gmail.com</p>
+                <p>Phone: +918883311488</p>
+                <p>WhatsApp: +918883311488</p>
+                <p>Business Hours: Monday - Saturday, 10:00 AM - 6:00 PM IST</p>
+            </div>
+        </section>
+
+        <div class="footer">
+            <p><strong>Aazhi Products</strong></p>
+            <p>Handcrafted with love in Tamil Nadu</p>
+            <p>Last Updated: December 2025</p>
+            <a href="index.html" class="back-home">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
