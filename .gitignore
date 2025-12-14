@@ -1,0 +1,8 @@
+﻿node_modules/
+.env
+.env.local
+*.log
+.DS_Store
+supabase/.temp/
+project-structure.txt
+verification-report.txt

@@ -11,9 +11,17 @@
     --gold: #c9a227;
     --gold-soft: #e8d48a;
     --bark: #5c4a3d;
-      /* Professional Fonts */
-  --font-display: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    --light-grey: #f5f5f5;
+--soft-grey: #e8e8e8;
+--pale-grey: #d3d3d3;
+--text-light: #9ca3af;
+--fresh-mint: #e8f5e9;
+--nature-green: #81c784;
+
+  --font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, sans-serif;
+--font-body: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+--font-light: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
   
     --shadow-sm: 0 2px 8px rgba(26, 46, 31, 0.08);
     --shadow-md: 0 4px 20px rgba(26, 46, 31, 0.12);
@@ -38,11 +46,20 @@ body {
     font-family: var(--font-body);
     background: var(--cream);
     color: var(--forest-deep);
-    line-height: 1.5;
+   line-height: 1.8;
+letter-spacing: 0.015em;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
 }
 
+p {
+    line-height: 1.8;
+    letter-spacing: 0.015em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    letter-spacing: 0.02em;
+}
 
 /******************************************************************************* header *********************************** *********/
 .header {
@@ -328,7 +345,8 @@ body {
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(160deg, var(--ivory) 0%, var(--cream) 40%, var(--mint-soft) 100%);
+    background: var(--fresh-mint);
+    /* linear-gradient(160deg, var(--ivory) 0%, var(--cream) 40%, var(--mint-soft) 100%); */
 }
 
 .hero-bg {
@@ -571,7 +589,7 @@ body {
 
 .hero-description {
     font-size: 0.9rem;
-    color: var(--bark);
+    color: var(--text-light);
     line-height: 1.6;
     max-width: 320px;
     margin: 0 auto 1.25rem;
@@ -1183,12 +1201,13 @@ body {
 /* PRODUCTS SECTION */
 .products-section {
   padding: 0.25rem 0.5rem 3.5rem;
-  background: linear-gradient(
+  background: var(--fresh-mint);
+  /* linear-gradient(
     180deg,
     rgba(248, 246, 241, 0.95) 0%,
     #fffef9 40%,
     #f8f6f1 100%
-  );
+  ); */
 }
 
 .products-section .products-header {
@@ -1208,7 +1227,7 @@ body {
 
 .products-subtitle {
   font-size: 0.9rem;
-  color: var(--bark);
+  color: var(--text-light);
   max-width: 600px;
   margin: auto;
   text-align: center;
@@ -1337,16 +1356,23 @@ body {
 .product-card:nth-child(4) { animation-delay: 0.16s; }
 
 .product-image-wrap {
-  position: relative;
-  background: radial-gradient(circle at 20% 0%, #d4e5cf 0%, #fffef9 55%, #f8f6f1 100%);
-  padding: 0;
+ position: relative;
+  background: var(--light-grey); /* CHANGE background */
+  padding: 1rem; /* ADD padding */
+  min-height: 300px; /* ADD min-height */
 }
 
 .product-image {
+ position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  border-radius: 16px;
-  object-fit: cover;
-  max-height: 220px;
+  height: 100%;
+  object-fit: contain; /* CHANGE FROM cover TO contain */
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none;
+  cursor: pointer; /* ADD cursor */
 }
 
 .product-tag {
@@ -1389,7 +1415,7 @@ body {
 
 .product-description {
   font-size: 0.75rem;
-  color: var(--bark);
+  color: var(--text-light);
   line-height: 1.5;
 }
 
@@ -1431,6 +1457,94 @@ body {
   opacity: 1;
   position: relative;
   pointer-events: auto;
+}
+
+/* ============= IMAGE LIGHTBOX ============= */
+.image-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-lightbox.active {
+  display: flex;
+  opacity: 1;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10001;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.lightbox-zoom-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10001;
+}
+
+.zoom-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.zoom-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
 .carousel-btn {
@@ -2182,6 +2296,7 @@ body {
   padding: 0.25rem 1.25rem 3rem;
   position: relative;
   overflow: hidden;
+  background: var(--light-grey);
 }
 
 .about-bg-pattern {
@@ -2241,7 +2356,7 @@ body {
 
 .about-lead {
   font-size: .85rem;
-  color: var(--bark);
+  color: var(--text-light);
   line-height: 1.7;
   max-width: 680px;
   margin: 0 auto;
@@ -2447,6 +2562,23 @@ body {
 .collage-item i {
   font-size: 1.2rem;
   color: var(--forest-deep);
+}
+
+.form-group select {
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s;
+  background: white;
+  cursor: pointer;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: var(--sage);
+  box-shadow: 0 0 0 3px rgba(90, 124, 82, 0.1);
 }
 
 /* About Responsive */

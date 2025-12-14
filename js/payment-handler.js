@@ -1,8 +1,8 @@
-// payment-handler.js
-// This file handles all payment-related functionality
+// payment-handler.js - PhonePe Integration
 
 let currentOrderId = null;
 let currentOrderNumber = null;
+let currentMerchantTxnId = null;
 
 // Modal elements
 const paymentModal = document.getElementById('paymentModal');
@@ -10,10 +10,6 @@ const paymentModalBackdrop = document.getElementById('paymentModalBackdrop');
 const paymentModalClose = document.getElementById('paymentModalClose');
 const customerForm = document.getElementById('customerDetailsForm');
 const formError = document.getElementById('formError');
-
-const paymentProcessingModal = document.getElementById('paymentProcessingModal');
-const displayOrderNumber = document.getElementById('displayOrderNumber');
-const displayAmount = document.getElementById('displayAmount');
 
 const resultModal = document.getElementById('resultModal');
 const resultModalBackdrop = document.getElementById('resultModalBackdrop');
@@ -70,11 +66,12 @@ customerForm.addEventListener('submit', async (e) => {
     name: formData.get('name').trim(),
     email: formData.get('email').trim(),
     phone: formData.get('phone').trim(),
+    state: formData.get('state').trim(),
     address: formData.get('address').trim()
   };
   
   // Validate
-  if (!customerData.name || !customerData.email || !customerData.phone || !customerData.address) {
+  if (!customerData.name || !customerData.email || !customerData.phone || !customerData.state || !customerData.address) {
     showError('Please fill in all required fields');
     return;
   }
@@ -96,186 +93,71 @@ customerForm.addEventListener('submit', async (e) => {
   submitBtn.disabled = true;
   
   try {
-    // Create order in database
-    const orderData = await createOrder(customerData);
-    
-    if (orderData) {
-      currentOrderId = orderData.orderId;
-      currentOrderNumber = orderData.orderNumber;
-      
-      // Close customer form modal
-      closePaymentModal();
-      
-      // Open payment processing modal
-      openPaymentProcessingModal(orderData.orderNumber, orderData.totalAmount);
-    }
-  } catch (error) {
-    console.error('Error creating order:', error);
-    showError('Failed to create order. Please try again.');
-  } finally {
-    submitBtnText.style.display = 'inline-block';
-    submitBtnLoader.style.display = 'none';
-    submitBtn.disabled = false;
-  }
-});
-
-// Create order in Supabase
-async function createOrder(customerData) {
-  try {
+    // Get cart
     const cart = getCart();
-    const deliveryCharge = 50;
     
     // Calculate total
+    const deliveryCharge = customerData.state === 'Tamil Nadu' ? 50 : 100;
     let subtotal = 0;
     cart.forEach(item => {
       subtotal += item.price * item.quantity;
     });
     const totalAmount = subtotal + deliveryCharge;
     
-    // Generate order number
-    const orderNumber = generateOrderNumber();
+    // Generate IDs
+    currentOrderNumber = generateOrderNumber();
+    currentMerchantTxnId = `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
-    // Insert order into database
-    const { data: orderData, error: orderError } = await supabaseClient
-      .from('orders')
-      .insert([
-        {
-          order_number: orderNumber,
-          customer_name: customerData.name,
-          customer_email: customerData.email,
-          customer_phone: customerData.phone,
-          customer_address: customerData.address,
-          total_amount: totalAmount,
-          payment_status: 'initiated'
-        }
-      ])
-      .select()
-      .single();
-    
-    if (orderError) throw orderError;
-    
-    // Insert order items
-    const orderItems = cart.map(item => ({
-      order_id: orderData.id,
-      product_id: item.id,
-      product_name: item.name,
-      product_size: item.size,
-      product_image: item.image,
-      price: item.price,
-      quantity: item.quantity,
-      line_total: item.price * item.quantity
-    }));
-    
-    const { error: itemsError } = await supabaseClient
-      .from('order_items')
-      .insert(orderItems);
-    
-    if (itemsError) throw itemsError;
-    
-    console.log('Order created successfully:', orderNumber);
-    
-    return {
-      orderId: orderData.id,
-      orderNumber: orderNumber,
-      totalAmount: totalAmount
+    // Prepare order data
+    const orderData = {
+      orderNumber: currentOrderNumber,
+      merchantTransactionId: currentMerchantTxnId,
+      customerName: customerData.name,
+      customerEmail: customerData.email,
+      customerPhone: customerData.phone,
+      customerState: customerData.state,
+      customerAddress: customerData.address,
+      totalAmount: totalAmount,
+      items: cart
     };
     
-  } catch (error) {
-    console.error('Error in createOrder:', error);
-    throw error;
-  }
-}
-
-// Open payment processing modal
-function openPaymentProcessingModal(orderNumber, amount) {
-  displayOrderNumber.textContent = orderNumber;
-  displayAmount.textContent = amount;
-  
-  paymentProcessingModal.classList.add('open');
-  paymentModalBackdrop.classList.add('show');
-  document.body.style.overflow = 'hidden';
-  
-  // Update order status to 'pending'
-  updateOrderStatus(currentOrderId, 'pending');
-}
-
-// Close payment processing modal
-function closePaymentProcessingModal() {
-  paymentProcessingModal.classList.remove('open');
-  paymentModalBackdrop.classList.remove('show');
-  document.body.style.overflow = '';
-}
-
-// Update order status in database
-async function updateOrderStatus(orderId, status) {
-  try {
-    const { error } = await supabaseClient
-      .from('orders')
-      .update({ 
-        payment_status: status,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', orderId);
+    // Call Supabase Edge Function to initiate payment
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/initiate-payment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      },
+      body: JSON.stringify({ orderData })
+    });
     
-    if (error) throw error;
+    const result = await response.json();
     
-    console.log('Order status updated to:', status);
+    if (result.success && result.paymentUrl) {
+      currentOrderId = result.orderId;
+      
+      // Store transaction ID in localStorage for verification
+      localStorage.setItem('pending_txn_id', currentMerchantTxnId);
+      
+      // Close modal
+      closePaymentModal();
+      
+      // Redirect to PhonePe payment page
+      window.location.href = result.paymentUrl;
+      
+    } else {
+      throw new Error(result.error || 'Failed to initiate payment');
+    }
+    
   } catch (error) {
-    console.error('Error updating order status:', error);
+    console.error('Error initiating payment:', error);
+    showError('Failed to initiate payment. Please try again.');
+  } finally {
+    submitBtnText.style.display = 'inline-block';
+    submitBtnLoader.style.display = 'none';
+    submitBtn.disabled = false;
   }
-}
-
-// Simulate successful payment
-document.getElementById('simulateSuccessBtn').addEventListener('click', async () => {
-  closePaymentProcessingModal();
-  await handlePaymentSuccess();
 });
-
-// Simulate failed payment
-document.getElementById('simulateFailureBtn').addEventListener('click', async () => {
-  closePaymentProcessingModal();
-  await handlePaymentFailure();
-});
-
-// Handle successful payment
-async function handlePaymentSuccess() {
-  try {
-    // Update order status to success
-    await updateOrderStatus(currentOrderId, 'success');
-    
-    // Send emails
-    await sendOrderEmails(currentOrderId, 'success');
-    
-    // Clear cart
-    localStorage.removeItem(CART_KEY);
-    updateFloatingCart(0);
-    renderCartDrawerItems();
-    renderProducts();
-    
-    // Show success modal
-    showResultModal('success', 'Payment Successful!', `Your order <span>${currentOrderNumber}</span> has been confirmed. <br> You will receive a confirmation email shortly. <br> Please copy your order number for future reference`);
-    
-  } catch (error) {
-    console.error('Error handling payment success:', error);
-  }
-}
-
-// Handle failed payment
-async function handlePaymentFailure() {
-  try {
-    // Update order status to failed
-    await updateOrderStatus(currentOrderId, 'failed');
-    
-    // Send failure notification email
-    await sendOrderEmails(currentOrderId, 'failed');
-    
-    // Show failure modal
-    showResultModal('failure', 'Payment Failed', `Unfortunately, your payment for order ${currentOrderNumber} could not be processed. Please try again.`);
-    
-  } catch (error) {
-    console.error('Error handling payment failure:', error);
-  }
-}
 
 // Show result modal
 function showResultModal(type, title, message) {
@@ -296,41 +178,20 @@ function closeResultModal() {
   resultModal.classList.remove('open');
   resultModalBackdrop.classList.remove('show');
   document.body.style.overflow = '';
+  
+  // Clear cart if success
+  const isSuccess = resultIcon.classList.contains('success');
+  if (isSuccess) {
+    localStorage.removeItem(CART_KEY);
+    localStorage.removeItem('pending_txn_id');
+    updateFloatingCart(0);
+    renderCartDrawerItems();
+    renderProducts();
+  }
 }
 
 resultModalClose.addEventListener('click', closeResultModal);
 resultModalBackdrop.addEventListener('click', closeResultModal);
-
-// Send order emails
-// async function sendOrderEmails(orderId, status) {
-//   try {
-//     // Fetch order details
-//     const { data: order, error: orderError } = await supabaseClient
-//       .from('orders')
-//       .select(`
-//         *,
-//         order_items (*)
-//       `)
-//       .eq('id', orderId)
-//       .single();
-    
-//     if (orderError) throw orderError;
-    
-//     // In production, you would call your backend API to send emails
-//     // For now, we'll just log the email data
-//     console.log('Email would be sent to:', order.customer_email);
-//     console.log('Order details:', order);
-    
-//     // You can integrate with services like:
-//     // - SendGrid
-//     // - Mailgun
-//     // - AWS SES
-//     // - Supabase Edge Functions
-    
-//   } catch (error) {
-//     console.error('Error sending emails:', error);
-//   }
-// }
 
 // Show error message
 function showError(message) {
@@ -343,24 +204,3 @@ function hideError() {
   formError.classList.remove('show');
   formError.textContent = '';
 }
-
-// Public functions for manual payment status update (for testing)
-window.setPaymentSuccess = async function(orderId) {
-  if (!orderId) {
-    console.error('Please provide orderId');
-    return;
-  }
-  await updateOrderStatus(orderId, 'success');
-  await sendOrderEmails(orderId, 'success');
-  console.log('Payment status set to SUCCESS');
-};
-
-window.setPaymentFailure = async function(orderId) {
-  if (!orderId) {
-    console.error('Please provide orderId');
-    return;
-  }
-  await updateOrderStatus(orderId, 'failed');
-  await sendOrderEmails(orderId, 'failed');
-  console.log('Payment status set to FAILED');
-};

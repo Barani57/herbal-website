@@ -120,7 +120,7 @@ async function sendOrderEmails(orderId, status) {
     // Send email to admin (same template, different recipient)
     const adminParams = {
       ...templateParams,
-      email: 'shamamal621@gmail.com',  // Admin email
+      email: 'aazhiproducts24@gmail.com',  // Admin email
       to_name: 'Aazhi Products Admin'
     };
     

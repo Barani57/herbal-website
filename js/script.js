@@ -302,31 +302,51 @@ const products = [
         ]
     },
     {
-        id: 'nalangu-maavu',
-        name: 'Nalangu Maavu',
-        category: 'powder',
-        description: 'Traditional herbal bath powder for skin cleansing, freshness, and natural glow.',
-        images: [
-            'assets/images/nalangu-mavu-1.webp',
-            'assets/images/nalangu-mavu-2.webp',
-            'assets/images/nalangu-mavu-3.webp'
-        ],
-        benefits: [
-            { icon: 'fa-sun', text: 'Removes tan' },
-            { icon: 'fa-sparkles', text: 'Enhances glow' },
-            { icon: 'fa-leaf', text: '100% natural' }
-        ],
-        ingredients: ['Green Gram', 'Wild Turmeric', 'Rose Petal', 'Sandalwood'],
-        usage: 'Mix with water or milk and apply all over the body. Rinse after 5 minutes.',
-        sizes: [
-            { size: 'Male 100g', price: 169, sku: 'NM-M-100', variant: 'male' },
-            { size: 'Male 250g', price: 299, sku: 'NM-M-250', variant: 'male' },
-            { size: 'Female 100g', price: 125, sku: 'NM-F-100', variant: 'female' },
-            { size: 'Female 250g', price: 250, sku: 'NM-F-250', variant: 'female' },
-            { size: 'Female 500g', price: 450, sku: 'NM-F-500', variant: 'female' },
-            { size: 'Female 1kg', price: 800, sku: 'NM-F-1K', variant: 'female' }
-        ]
-    }
+    id: 'nalangu-maavu-male',
+    name: 'Nalangu Maavu (Male)',
+    category: 'powder',
+    description: 'Traditional herbal bath powder for men—skin cleansing, freshness, and natural glow.',
+    images: [
+        'assets/images/nalangu-mavu-1.webp',
+        'assets/images/nalangu-mavu-2.webp',
+        'assets/images/nalangu-mavu-3.webp'
+    ],
+    benefits: [
+        { icon: 'fa-sun', text: 'Removes tan' },
+        { icon: 'fa-sparkles', text: 'Enhances glow' },
+        { icon: 'fa-leaf', text: '100% natural' }
+    ],
+    ingredients: ['Green Gram', 'Wild Turmeric', 'Rose Petal', 'Sandalwood'],
+    usage: 'Mix with water or milk and apply all over the body. Rinse after 5 minutes.',
+    sizes: [
+        { size: '100g', price: 299, sku: 'NM-M-100' },
+        { size: '250g', price: 299, sku: 'NM-M-250' }
+    ]
+},
+{
+    id: 'nalangu-maavu-female',
+    name: 'Nalangu Maavu (Female)',
+    category: 'powder',
+    description: 'Traditional herbal bath powder for women—skin cleansing, freshness, and natural glow.',
+    images: [
+        'assets/images/nalangu-mavu-1.webp',
+        'assets/images/nalangu-mavu-2.webp',
+        'assets/images/nalangu-mavu-3.webp'
+    ],
+    benefits: [
+        { icon: 'fa-sun', text: 'Removes tan' },
+        { icon: 'fa-sparkles', text: 'Enhances glow' },
+        { icon: 'fa-leaf', text: '100% natural' }
+    ],
+    ingredients: ['Green Gram', 'Wild Turmeric', 'Rose Petal', 'Sandalwood'],
+    usage: 'Mix with water or milk and apply all over the body. Rinse after 5 minutes.',
+    sizes: [
+        { size: '100g', price: 250, sku: 'NM-F-100' },
+        { size: '250g', price: 250, sku: 'NM-F-250' },
+        { size: '500g', price: 450, sku: 'NM-F-500' },
+        { size: '1kg', price: 450, sku: 'NM-F-1K' }
+    ]
+}
 ];
 // Active category filter
 let activeCategory = 'all';
@@ -622,6 +642,75 @@ function initializeCarousels() {
     });
 }
 
+// ============= IMAGE LIGHTBOX FUNCTIONALITY =============
+function initializeLightbox() {
+    const lightbox = document.getElementById('imageLightbox');
+    const lightboxImg = document.getElementById('lightboxImage');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const zoomIn = document.getElementById('zoomIn');
+    const zoomOut = document.getElementById('zoomOut');
+    const zoomReset = document.getElementById('zoomReset');
+    
+    let currentZoom = 1;
+    
+    // Open lightbox on image click
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('product-image') && e.target.classList.contains('active')) {
+            lightbox.classList.add('active');
+            lightboxImg.src = e.target.src;
+            currentZoom = 1;
+            lightboxImg.style.transform = `scale(${currentZoom})`;
+            document.body.style.overflow = 'hidden';
+        }
+    });
+    
+    // Close lightbox
+    lightboxClose.addEventListener('click', () => {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+    
+    // Close on backdrop click
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Zoom controls
+    zoomIn.addEventListener('click', () => {
+        currentZoom = Math.min(currentZoom + 0.25, 3);
+        lightboxImg.style.transform = `scale(${currentZoom})`;
+    });
+    
+    zoomOut.addEventListener('click', () => {
+        currentZoom = Math.max(currentZoom - 0.25, 0.5);
+        lightboxImg.style.transform = `scale(${currentZoom})`;
+    });
+    
+    zoomReset.addEventListener('click', () => {
+        currentZoom = 1;
+        lightboxImg.style.transform = `scale(${currentZoom})`;
+    });
+    
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        
+        if (e.key === 'Escape') {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        } else if (e.key === '+') {
+            zoomIn.click();
+        } else if (e.key === '-') {
+            zoomOut.click();
+        } else if (e.key === '0') {
+            zoomReset.click();
+        }
+    });
+}
+
 // Cleanup intervals when needed
 function cleanupCarousels() {
     carouselIntervals.forEach(interval => clearInterval(interval));
@@ -806,7 +895,8 @@ function bumpCartBadge() {
 // On load – render and restore cart count
 document.addEventListener('DOMContentLoaded', () => {
     renderProducts();
-    initCategoryFilter(); // ADD THIS LINE
+    initCategoryFilter();
+    initializeLightbox(); // ADD THIS LINE
     const cart = getCart();
     updateFloatingCart(cart.length);
 });
@@ -848,7 +938,9 @@ function closeCartDrawer() {
 function renderCartDrawerItems() {
     if (!cartDrawerBody || !cartDrawerTotal) return;
     const cart = getCart();
-    const delivery = 50; // flat delivery
+    // Dynamic delivery based on state (default to TN)
+const selectedState = localStorage.getItem('selectedState') || 'Tamil Nadu';
+const delivery = selectedState === 'Tamil Nadu' ? 50 : 100;
 
     if (!cart.length) {
         cartDrawerBody.innerHTML = '<p style="font-size:0.85rem;color:var(--bark);">Your cart is empty.</p>';
@@ -891,10 +983,10 @@ function renderCartDrawerItems() {
     const total = subtotal + delivery;
     cartDrawerTotal.textContent = `₹${total}`;
 
-    cartDrawerBody.insertAdjacentHTML('beforeend', `
+cartDrawerBody.insertAdjacentHTML('beforeend', `
     <div class="cart-drawer-summary">
       <div><span>Subtotal</span><span>₹${subtotal}</span></div>
-      <div><span>Delivery</span><span>₹${delivery}</span></div>
+      <div><span>Delivery (${selectedState || 'Tamil Nadu'})</span><span>₹${delivery}</span></div>
     </div>
   `);
 

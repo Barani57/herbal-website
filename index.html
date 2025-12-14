@@ -14,6 +14,10 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
+        <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Sora:wght@400;500;600&family=Poppins:wght@300;400&display=swap"
+    rel="stylesheet">
+
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -154,7 +158,7 @@
 
             <!-- Main Content -->
             <div class="hero-main">
-                <h1 class="hero-title">
+                <h1 class="hero-title" style="font-weight: 900; text-transform: uppercase;">
                     Pure Herbal Care for <span class="highlight">Healthy You</span>
                 </h1>
                 <p class="hero-description">
@@ -606,15 +610,36 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="customerPhone">
-                        <i class="fa-solid fa-phone"></i> Phone Number *
-                    </label>
-                    <input type="tel" id="customerPhone" name="phone" required placeholder="+91 XXXXX XXXXX"
-                        pattern="[0-9+\s-]+" />
-                </div>
+    <label for="customerPhone">
+        <i class="fa-solid fa-phone"></i> Phone Number *
+    </label>
+    <input type="tel" id="customerPhone" name="phone" required placeholder="+91 XXXXX XXXXX"
+        pattern="[0-9+\s-]+" />
+</div>
 
-                <div class="form-group">
-                    <label for="customerAddress">
+<!-- ADD THIS BLOCK -->
+<div class="form-group">
+    <label for="customerState">
+        <i class="fa-solid fa-map-location-dot"></i> State *
+    </label>
+    <select id="customerState" name="state" required>
+        <option value="">Select State</option>
+        <option value="Tamil Nadu">Tamil Nadu</option>
+        <option value="Andhra Pradesh">Andhra Pradesh</option>
+        <option value="Karnataka">Karnataka</option>
+        <option value="Kerala">Kerala</option>
+        <option value="Maharashtra">Maharashtra</option>
+        <option value="Gujarat">Gujarat</option>
+        <option value="Rajasthan">Rajasthan</option>
+        <option value="Uttar Pradesh">Uttar Pradesh</option>
+        <option value="West Bengal">West Bengal</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Other">Other State</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="customerAddress">
                         <i class="fa-solid fa-location-dot"></i> Complete Address *
                     </label>
                     <textarea id="customerAddress" name="address" required rows="3"
@@ -685,6 +710,27 @@
     <button id="backToTop" class="back-to-top" aria-label="Back to top">
         <i class="fa-solid fa-arrow-up"></i>
     </button>
+
+    <!-- Image Lightbox -->
+<div class="image-lightbox" id="imageLightbox">
+    <button class="lightbox-close" id="lightboxClose">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="lightbox-content">
+        <img src="" alt="Product Image" class="lightbox-image" id="lightboxImage">
+    </div>
+    <div class="lightbox-zoom-controls">
+        <button class="zoom-btn" id="zoomIn">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+        <button class="zoom-btn" id="zoomReset">
+            <i class="fa-solid fa-expand"></i>
+        </button>
+        <button class="zoom-btn" id="zoomOut">
+            <i class="fa-solid fa-minus"></i>
+        </button>
+    </div>
+</div>
 
 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
