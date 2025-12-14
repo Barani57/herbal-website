@@ -19,18 +19,109 @@ const resultMessage = document.getElementById('resultMessage');
 const resultModalClose = document.getElementById('resultModalClose');
 
 // Open payment modal when UPI Pay button is clicked
+// const upiPayBtn = document.getElementById('upiPayBtn');
+// if (upiPayBtn) {
+//   upiPayBtn.addEventListener('click', () => {
+//     const cart = getCart();
+    
+//     if (!cart || cart.length === 0) {
+//       showError('Your cart is empty!');
+//       return;
+//     }
+    
+//     openPaymentModal();
+//   });
+// }
+
+// Payment Handler
 const upiPayBtn = document.getElementById('upiPayBtn');
+
 if (upiPayBtn) {
-  upiPayBtn.addEventListener('click', () => {
-    const cart = getCart();
-    
-    if (!cart || cart.length === 0) {
-      showError('Your cart is empty!');
-      return;
-    }
-    
-    openPaymentModal();
-  });
+    upiPayBtn.addEventListener('click', async () => {
+        const cart = getCart();
+        if (!cart.length) {
+            alert('Your cart is empty!');
+            return;
+        }
+
+        // Get customer details from cart form
+        const name = document.getElementById('cartCustomerName').value.trim();
+        const email = document.getElementById('cartCustomerEmail').value.trim();
+        const phone = document.getElementById('cartCustomerPhone').value.trim();
+        const state = document.getElementById('cartCustomerState').value;
+        const address = document.getElementById('cartCustomerAddress').value.trim();
+        const formError = document.getElementById('cartFormError');
+
+        // Validate
+        if (!name || !email || !phone || !state || !address) {
+            formError.textContent = 'Please fill all required fields!';
+            formError.classList.add('show');
+            return;
+        }
+
+        if (!email.includes('@')) {
+            formError.textContent = 'Please enter a valid email address!';
+            formError.classList.add('show');
+            return;
+        }
+
+        formError.classList.remove('show');
+
+        // Calculate delivery
+        const delivery = state === 'Tamil Nadu' ? 50 : 100;
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const totalAmount = subtotal + delivery;
+
+        // Prepare order data
+        const orderNumber = `ORD-${Date.now()}`;
+        const merchantTransactionId = `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+        const orderData = {
+            orderNumber,
+            merchantTransactionId,
+            customerName: name,
+            customerEmail: email,
+            customerPhone: phone,
+            customerState: state,
+            customerAddress: address,
+            totalAmount,
+            items: cart
+        };
+
+        console.log('Order Data:', orderData);
+
+        try {
+            // Show loading
+            upiPayBtn.disabled = true;
+            upiPayBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+            // Call initiate-payment function
+            const response = await fetch(`${SUPABASE_URL}/functions/v1/initiate-payment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify({ orderData })
+            });
+
+            const result = await response.json();
+            console.log('Payment Response:', result);
+
+            if (result.success && result.paymentUrl) {
+                // Redirect to PhonePe
+                window.location.href = result.paymentUrl;
+            } else {
+                throw new Error(result.error || 'Payment initiation failed');
+            }
+
+        } catch (error) {
+            console.error('Payment Error:', error);
+            alert('Payment failed: ' + error.message);
+            upiPayBtn.disabled = false;
+            upiPayBtn.innerHTML = '<span>Proceed to Checkout</span><i class="fa-solid fa-indian-rupee-sign"></i>';
+        }
+    });
 }
 
 // Open payment modal

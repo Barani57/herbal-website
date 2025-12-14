@@ -238,48 +238,48 @@ function renderTable() {
     });
     
     return `
-      <tr>
-        <td>
-          <span class="order-number">${order.order_number}</span>
+    <tr>
+        <td data-label="Order #">
+            <span class="order-number">${order.order_number}</span>
         </td>
-        <td>
-          <div class="customer-info">
-            <span class="customer-name">${order.customer_name}</span>
-            <span class="customer-email">${order.customer_email}</span>
-          </div>
+        <td data-label="Customer">
+            <div class="customer-info">
+                <span class="customer-name">${order.customer_name}</span>
+                <span class="customer-email">${order.customer_email}</span>
+            </div>
         </td>
-        <td>
-          <div class="contact-info">
-            <span class="contact-phone">
-              <i class="fa-solid fa-phone"></i> ${order.customer_phone}
+        <td data-label="Contact">
+            <div class="contact-info">
+                <span class="contact-phone">
+                    <i class="fa-solid fa-phone"></i> ${order.customer_phone}
+                </span>
+            </div>
+        </td>
+        <td data-label="Amount">
+            <span class="amount">₹${parseFloat(order.total_amount).toFixed(2)}</span>
+        </td>
+        <td data-label="Status">
+            <span class="status-badge status-${order.payment_status}">
+                ${getStatusIcon(order.payment_status)}
+                ${order.payment_status}
             </span>
-          </div>
         </td>
-        <td>
-          <span class="amount">₹${parseFloat(order.total_amount).toFixed(2)}</span>
+        <td data-label="Date">
+            <div class="order-date">
+                <div>${formattedDate}</div>
+                <div style="font-size: 0.8rem; color: #999;">${formattedTime}</div>
+            </div>
         </td>
-        <td>
-          <span class="status-badge status-${order.payment_status}">
-            ${getStatusIcon(order.payment_status)}
-            ${order.payment_status}
-          </span>
-        </td>
-        <td>
-          <div class="order-date">
-            <div>${formattedDate}</div>
-            <div style="font-size: 0.8rem; color: #999;">${formattedTime}</div>
-          </div>
-        </td>
-        <td>
-          <button class="action-btn" onclick="viewOrderDetails('${order.id}')">
-            <i class="fa-solid fa-eye"></i> View
-          </button>
-           <button class="action-btn btn-delete" onclick="deleteOrder('${order.id}', '${order.order_number}')">
+        <td data-label="Actions">
+            <button class="action-btn" onclick="viewOrderDetails('${order.id}')">
+                <i class="fa-solid fa-eye"></i> View
+            </button>
+            <button class="action-btn btn-delete" onclick="deleteOrder('${order.id}', '${order.order_number}')">
                 <i class="fas fa-trash"></i> Delete
             </button>
         </td>
-      </tr>
-    `;
+    </tr>
+`;
   }).join('');
   
   renderPagination();
@@ -447,6 +447,11 @@ function renderOrderModal(order) {
   const total = order.total_amount;
   
   orderModalBody.innerHTML = `
+  <div style="text-align: center; margin: 1rem 0;">
+    <button class="btn-secondary" onclick="printOrder('${order.id}')" style="border: none;">
+        <i class="fa-solid fa-print"></i> Print Receipt
+    </button>
+</div>
     <div class="order-details-grid">
       <div class="detail-card">
         <div class="detail-label">
@@ -527,7 +532,15 @@ function renderOrderModal(order) {
         `).join('')}
       </div>
     </div>
-    
+    <div style="text-align: center; margin: 2rem 0;">
+    <a 
+        href="https://wa.me/${order.customer_phone}?text=Hello%20${encodeURIComponent(order.customer_name)},%20regarding%20your%20Aazhi%20order%20${order.order_number}" 
+        target="_blank"
+        class="btn-primary" 
+        style="display: inline-flex; text-decoration: none;">
+        <i class="fa-brands fa-whatsapp"></i> Contact Customer on WhatsApp
+    </a>
+</div>
     <div class="order-summary">
       <div class="summary-row">
         <span>Subtotal:</span>
@@ -676,6 +689,80 @@ function exportToCSV() {
   document.body.removeChild(link);
 }
 
+// Print order receipt
+function printOrder(orderId) {
+    const order = allOrders.find(o => o.id === orderId);
+    if (!order) return;
+    
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Order Receipt - ${order.order_number}</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 20px; }
+                .header { text-align: center; margin-bottom: 30px; }
+                .logo { font-size: 24px; font-weight: bold; color: #816F56; }
+                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+                th { background: #816F56; color: white; }
+                .total { font-weight: bold; font-size: 18px; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <div class="logo">🌿 Aazhi Products</div>
+                <p>Order Receipt</p>
+            </div>
+            
+            <h2>Order #${order.order_number}</h2>
+            <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleDateString()}</p>
+            <p><strong>Customer:</strong> ${order.customer_name}</p>
+            <p><strong>Phone:</strong> ${order.customer_phone}</p>
+            <p><strong>Address:</strong> ${order.customer_address}</p>
+            
+            <h3>Items:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Size</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${order.order_items.map(item => `
+                        <tr>
+                            <td>${item.product_name}</td>
+                            <td>${item.product_size}</td>
+                            <td>${item.quantity}</td>
+                            <td>₹${item.price}</td>
+                            <td>₹${item.line_total}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            
+            <p class="total">Total: ₹${order.total_amount}</p>
+            
+            <script>
+                window.print();
+                window.onafterprint = () => window.close();
+            </script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
+
+// Make printOrder available globally
+window.printOrder = printOrder;
+
 // Make viewOrderDetails available globally
 window.viewOrderDetails = viewOrderDetails;
 window.goToPage = goToPage;
+window.deleteOrder = deleteOrder;
+window.printOrder = printOrder;

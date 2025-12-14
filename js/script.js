@@ -255,7 +255,7 @@ const products = [
         ingredients: ['Coconut Oil', 'Castor Oil', 'Amla', 'Bhringraj', 'Fenugreek'],
         usage: 'Apply a small amount to the scalp and massage gently. Leave for 1 hour before washing.',
         sizes: [
-            { size: '100ml', price: 10, sku: 'HO-100' },
+            { size: '100ml', price: 249, sku: 'HO-100' },
             { size: '200ml', price: 399, sku: 'HO-200' }
         ]
     },
@@ -897,6 +897,15 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProducts();
     initCategoryFilter();
     initializeLightbox(); // ADD THIS LINE
+
+     const stateSelect = document.getElementById('cartCustomerState');
+    
+    if (stateSelect) {
+        stateSelect.addEventListener('change', () => {
+            renderCartDrawerItems(); // Re-render to update delivery
+        });
+    }
+
     const cart = getCart();
     updateFloatingCart(cart.length);
 });
@@ -935,18 +944,82 @@ function closeCartDrawer() {
     cartDrawer.setAttribute('aria-hidden', 'true');
 }
 
+// function renderCartDrawerItems() {
+//     if (!cartDrawerBody || !cartDrawerTotal) return;
+//     const cart = getCart();
+//     // Dynamic delivery based on state (default to TN)
+// const selectedState = localStorage.getItem('selectedState') || 'Tamil Nadu';
+// const delivery = selectedState === 'Tamil Nadu' ? 5 : 10;
+
+//     if (!cart.length) {
+//         cartDrawerBody.innerHTML = '<p style="font-size:0.85rem;color:var(--bark);">Your cart is empty.</p>';
+//         cartDrawerTotal.textContent = '₹0';
+//         return;
+//     }
+
+//     let subtotal = 0;
+//     cartDrawerBody.innerHTML = cart.map((item, index) => {
+//         const line = item.price * item.quantity;
+//         subtotal += line;
+//         return `
+//       <div class="cart-drawer-item" data-cart-index="${index}">
+//         <div class="cart-drawer-item-left">
+//           <div class="cart-drawer-thumb">
+//             <img src="${item.image}" alt="${item.name}" />
+//           </div>
+//           <div class="cart-drawer-item-main">
+//             <span class="cart-drawer-item-name">${item.name}</span>
+//             <span class="cart-drawer-item-meta">${item.size} • ₹${item.price}</span>
+//           </div>
+//         </div>
+//         <div class="cart-drawer-item-right">
+//         <button class="drawer-remove" data-drawer-remove>
+//             <i class="fa-solid fa-trash-can"></i>
+//           </button>
+//           <span class="cart-drawer-line">₹${line}</span>
+//           <div class="drawer-qty-control">
+//             <button class="drawer-qty-btn" data-drawer-minus>-</button>
+//             <span class="drawer-qty-value">${item.quantity}</span>
+//             <button class="drawer-qty-btn" data-drawer-plus>+</button>
+//           </div>
+          
+          
+//         </div>
+//       </div>
+//     `;
+//     }).join('');
+
+//     const total = subtotal + delivery;
+//     cartDrawerTotal.textContent = `₹${total}`;
+
+// cartDrawerBody.insertAdjacentHTML('beforeend', `
+//     <div class="cart-drawer-summary">
+//       <div><span>Subtotal</span><span>₹${subtotal}</span></div>
+//       <div><span>Delivery (${selectedState || 'Tamil Nadu'})</span><span>₹${delivery}</span></div>
+//     </div>
+//   `);
+
+//     attachDrawerItemEvents();
+// }
+
 function renderCartDrawerItems() {
     if (!cartDrawerBody || !cartDrawerTotal) return;
     const cart = getCart();
-    // Dynamic delivery based on state (default to TN)
-const selectedState = localStorage.getItem('selectedState') || 'Tamil Nadu';
-const delivery = selectedState === 'Tamil Nadu' ? 5 : 10;
+
+    const customerForm = document.getElementById('cartCustomerForm');
+    const upiPayBtn = document.getElementById('upiPayBtn');
+    const stateSelect = document.getElementById('cartCustomerState');
 
     if (!cart.length) {
-        cartDrawerBody.innerHTML = '<p style="font-size:0.85rem;color:var(--bark);">Your cart is empty.</p>';
+        cartDrawerBody.innerHTML = '<p style="font-size:0.85rem;color:var(--bark);padding:1rem;">Your cart is empty.</p>';
         cartDrawerTotal.textContent = '₹0';
+        if (customerForm) customerForm.style.display = 'none';
+        if (upiPayBtn) upiPayBtn.style.display = 'none';
         return;
     }
+
+    // Show customer form when cart has items
+    if (customerForm) customerForm.style.display = 'block';
 
     let subtotal = 0;
     cartDrawerBody.innerHTML = cart.map((item, index) => {
@@ -964,7 +1037,7 @@ const delivery = selectedState === 'Tamil Nadu' ? 5 : 10;
           </div>
         </div>
         <div class="cart-drawer-item-right">
-        <button class="drawer-remove" data-drawer-remove>
+          <button class="drawer-remove" data-drawer-remove>
             <i class="fa-solid fa-trash-can"></i>
           </button>
           <span class="cart-drawer-line">₹${line}</span>
@@ -973,25 +1046,44 @@ const delivery = selectedState === 'Tamil Nadu' ? 5 : 10;
             <span class="drawer-qty-value">${item.quantity}</span>
             <button class="drawer-qty-btn" data-drawer-plus>+</button>
           </div>
-          
-          
         </div>
       </div>
     `;
     }).join('');
 
+    // Get selected state for delivery calculation
+    const selectedState = stateSelect ? stateSelect.value : '';
+    const delivery = selectedState === 'Tamil Nadu' ? 50 : selectedState ? 100 : 0;
+
     const total = subtotal + delivery;
     cartDrawerTotal.textContent = `₹${total}`;
 
-cartDrawerBody.insertAdjacentHTML('beforeend', `
-    <div class="cart-drawer-summary">
-      <div><span>Subtotal</span><span>₹${subtotal}</span></div>
-      <div><span>Delivery (${selectedState || 'Tamil Nadu'})</span><span>₹${delivery}</span></div>
-    </div>
-  `);
+    // Show summary
+    cartDrawerBody.insertAdjacentHTML('beforeend', `
+        <div class="cart-drawer-summary">
+          <div><span>Subtotal</span><span>₹${subtotal}</span></div>
+          ${selectedState ? `<div><span>Delivery (${selectedState})</span><span>₹${delivery}</span></div>` : ''}
+        </div>
+      `);
+
+    // Show/hide checkout button based on state selection
+    if (upiPayBtn) {
+        upiPayBtn.style.display = selectedState ? 'flex' : 'none';
+    }
 
     attachDrawerItemEvents();
 }
+
+// Listen for state selection to update delivery
+// document.addEventListener('DOMContentLoaded', () => {
+//     const stateSelect = document.getElementById('cartCustomerState');
+    
+//     if (stateSelect) {
+//         stateSelect.addEventListener('change', () => {
+//             renderCartDrawerItems(); // Re-render to update delivery
+//         });
+//     }
+// });
 
 cartDrawerClose.addEventListener("click", () => {
     closeCartDrawer();
