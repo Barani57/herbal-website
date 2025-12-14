@@ -255,7 +255,7 @@ const products = [
         ingredients: ['Coconut Oil', 'Castor Oil', 'Amla', 'Bhringraj', 'Fenugreek'],
         usage: 'Apply a small amount to the scalp and massage gently. Leave for 1 hour before washing.',
         sizes: [
-            { size: '100ml', price: 249, sku: 'HO-100' },
+            { size: '100ml', price: 10, sku: 'HO-100' },
             { size: '200ml', price: 399, sku: 'HO-200' }
         ]
     },
@@ -940,7 +940,7 @@ function renderCartDrawerItems() {
     const cart = getCart();
     // Dynamic delivery based on state (default to TN)
 const selectedState = localStorage.getItem('selectedState') || 'Tamil Nadu';
-const delivery = selectedState === 'Tamil Nadu' ? 50 : 100;
+const delivery = selectedState === 'Tamil Nadu' ? 5 : 10;
 
     if (!cart.length) {
         cartDrawerBody.innerHTML = '<p style="font-size:0.85rem;color:var(--bark);">Your cart is empty.</p>';
