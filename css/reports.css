@@ -1390,4 +1390,51 @@
         margin-left: 0;
     }
 }
+
+/* Better mobile table handling */
+@media (max-width: 768px) {
+    .orders-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .orders-table thead,
+    .orders-table tbody,
+    .orders-table tr,
+    .orders-table th,
+    .orders-table td {
+        display: block;
+    }
+    
+    .orders-table thead {
+        display: none; /* Hide header on mobile */
+    }
+    
+    .orders-table tr {
+        margin-bottom: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 1rem;
+        background: white;
+    }
+    
+    .orders-table td {
+        text-align: left;
+        padding: 0.5rem;
+        border: none;
+        position: relative;
+        padding-left: 50%;
+    }
+    
+    .orders-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0.5rem;
+        font-weight: 600;
+        color: var(--earth);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+    }
+}
   

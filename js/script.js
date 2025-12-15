@@ -929,12 +929,26 @@ const cartDrawerBody = document.getElementById('cartDrawerBody');
 const cartDrawerTotal = document.getElementById('cartDrawerTotal');
 const cartDrawerClose = document.getElementById('cartDrawerClose');
 
+// function openCartDrawer() {
+//     if (!cartDrawer) return;
+//     cartDrawer.classList.add('open');
+//     cartDrawerBackdrop.classList.add('show');
+//     cartDrawer.setAttribute('aria-hidden', 'false');
+//     renderCartDrawerItems();
+// }
+
 function openCartDrawer() {
     if (!cartDrawer) return;
     cartDrawer.classList.add('open');
     cartDrawerBackdrop.classList.add('show');
     cartDrawer.setAttribute('aria-hidden', 'false');
     renderCartDrawerItems();
+    
+    // ✅ ADDED: Ensure drawer body is scrolled to top
+    setTimeout(() => {
+        const body = document.getElementById('cartDrawerBody');
+        if (body) body.scrollTop = 0;
+    }, 100);
 }
 
 function closeCartDrawer() {
@@ -942,6 +956,13 @@ function closeCartDrawer() {
     cartDrawer.classList.remove('open');
     cartDrawerBackdrop.classList.remove('show');
     cartDrawer.setAttribute('aria-hidden', 'true');
+}
+
+// Close cart when clicking backdrop
+if (cartDrawerBackdrop) {
+    cartDrawerBackdrop.addEventListener('click', () => {
+        closeCartDrawer();
+    });
 }
 
 // function renderCartDrawerItems() {
@@ -1003,12 +1024,15 @@ function closeCartDrawer() {
 // }
 
 function renderCartDrawerItems() {
-    if (!cartDrawerBody || !cartDrawerTotal) return;
+
+      if (!cartDrawerBody || !cartDrawerTotal) return;
     const cart = getCart();
 
     const customerForm = document.getElementById('cartCustomerForm');
     const upiPayBtn = document.getElementById('upiPayBtn');
     const stateSelect = document.getElementById('cartCustomerState');
+    
+
 
     if (!cart.length) {
         cartDrawerBody.innerHTML = '<p style="font-size:0.85rem;color:var(--bark);padding:1rem;">Your cart is empty.</p>';
@@ -1018,8 +1042,80 @@ function renderCartDrawerItems() {
         return;
     }
 
+    // ✅ ADDED: Scroll to top when cart opens
+    if (cartDrawerBody.scrollTop > 0) {
+        cartDrawerBody.scrollTop = 0;
+    }
+
+    // Add this near your upiPayBtn event listener
+if (document.getElementById('upiPayBtn')) {
+    document.getElementById('upiPayBtn').addEventListener('click', () => {
+        const name = document.getElementById('cartCustomerName')?.value.trim();
+        const email = document.getElementById('cartCustomerEmail')?.value.trim();
+        const phone = document.getElementById('cartCustomerPhone')?.value.trim();
+        const state = document.getElementById('cartCustomerState')?.value;
+        const address = document.getElementById('cartCustomerAddress')?.value.trim();
+        const errorDiv = document.getElementById('cartFormError');
+
+        // Validate all fields
+        if (!name || !email || !phone || !state || !address) {
+            if (errorDiv) {
+                errorDiv.textContent = 'Please fill in all required fields';
+                errorDiv.classList.add('show');
+            }
+            return;
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            if (errorDiv) {
+                errorDiv.textContent = 'Please enter a valid email address';
+                errorDiv.classList.add('show');
+            }
+            return;
+        }
+
+        // Validate phone (basic check)
+        if (phone.length < 10) {
+            if (errorDiv) {
+                errorDiv.textContent = 'Please enter a valid phone number';
+                errorDiv.classList.add('show');
+            }
+            return;
+        }
+
+        // Clear error if validation passes
+        if (errorDiv) {
+            errorDiv.classList.remove('show');
+        }
+
+        // Proceed to payment (your existing payment handler code here)
+        console.log('Validation passed, proceeding to payment...');
+        // Call your payment handler here
+    });
+}
+
     // Show customer form when cart has items
     if (customerForm) customerForm.style.display = 'block';
+
+    // if (!cartDrawerBody || !cartDrawerTotal) return;
+    // const cart = getCart();
+
+    // const customerForm = document.getElementById('cartCustomerForm');
+    // const upiPayBtn = document.getElementById('upiPayBtn');
+    // const stateSelect = document.getElementById('cartCustomerState');
+
+    // if (!cart.length) {
+    //     cartDrawerBody.innerHTML = '<p style="font-size:0.85rem;color:var(--bark);padding:1rem;">Your cart is empty.</p>';
+    //     cartDrawerTotal.textContent = '₹0';
+    //     if (customerForm) customerForm.style.display = 'none';
+    //     if (upiPayBtn) upiPayBtn.style.display = 'none';
+    //     return;
+    // }
+
+    // // Show customer form when cart has items
+    // if (customerForm) customerForm.style.display = 'block';
 
     let subtotal = 0;
     cartDrawerBody.innerHTML = cart.map((item, index) => {

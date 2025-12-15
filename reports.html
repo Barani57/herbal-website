@@ -57,6 +57,9 @@
       </nav>
       
       <div class="header-actions">
+        <button class="btn-secondary" onclick="logout()" style="border: none;">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </button>
         <a href="./index.html" class="btn-secondary">
           <i class="fa-solid fa-arrow-left"></i> Back to Home
         </a>
@@ -77,14 +80,14 @@
           <p class="page-subtitle">View and manage all customer orders</p>
         </div>
         
-        <div class="header-actions">
-          <button class="btn-export btn-excel" id="exportExcelBtn">
-            <i class="fa-solid fa-file-excel"></i> Export Excel
-          </button>
-          <!-- <button class="btn-export btn-csv" id="exportCsvBtn">
-            <i class="fa-solid fa-file-csv"></i> Export CSV
-          </button> -->
-        </div>
+       <div class="header-actions">
+    <button class="btn-secondary" onclick="location.reload()" style="border: none;">
+        <i class="fa-solid fa-rotate"></i> Refresh
+    </button>
+    <button class="btn-export btn-excel" id="exportExcelBtn">
+        <i class="fa-solid fa-file-excel"></i> Export Excel
+    </button>
+</div>
       </div>
       
       <!-- Stats Cards -->

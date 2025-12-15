@@ -18,7 +18,6 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseKey)
 
-    // Create order in database
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert([{
@@ -37,7 +36,6 @@ serve(async (req) => {
 
     if (orderError) throw orderError
 
-    // Insert order items
     const orderItems = orderData.items.map((item: any) => ({
       order_id: order.id,
       product_id: item.id,
@@ -55,65 +53,101 @@ serve(async (req) => {
 
     if (itemsError) throw itemsError
 
-    // Get PhonePe credentials
-    const merchantId = Deno.env.get('PHONEPE_MERCHANT_ID')!
+    const clientId = Deno.env.get('PHONEPE_MERCHANT_ID')!
     const clientSecret = Deno.env.get('PHONEPE_CLIENT_SECRET')!
     const env = Deno.env.get('PHONEPE_ENV') || 'UAT'
-    const baseUrl = env === 'PROD' 
-      ? 'https://api.phonepe.com' 
-      : 'https://api-preprod.phonepe.com'
 
-    // Get OAuth token
-    const tokenResponse = await fetch(`${baseUrl}/apis/pg-sandbox/v1/oauth/token`, {
+    const tokenUrl = env === 'PROD'
+      ? 'https://api.phonepe.com/apis/identity-manager/v1/oauth/token'
+      : 'https://api-preprod.phonepe.com/apis/pg-sandbox/v1/oauth/token'
+
+    const paymentUrl = env === 'PROD'
+      ? 'https://api.phonepe.com/apis/pg/checkout/v2/pay'
+      : 'https://api-preprod.phonepe.com/apis/pg-sandbox/checkout/v2/pay'
+
+    console.log('Getting OAuth token...')
+    const tokenResponse = await fetch(tokenUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: new URLSearchParams({
-        client_id: merchantId,
+        client_id: clientId,
+        client_version: '1',
         client_secret: clientSecret,
         grant_type: 'client_credentials'
       })
     })
 
-    const tokenData = await tokenResponse.json()
-    
+    const tokenText = await tokenResponse.text()
+    console.log('Token response status:', tokenResponse.status)
+    console.log('Token response body:', tokenText)
+
+    let tokenData
+    try {
+      tokenData = JSON.parse(tokenText)
+    } catch (e) {
+      throw new Error(`Failed to parse token response: ${tokenText}`)
+    }
+
     if (!tokenData.access_token) {
+      console.error('Token response:', tokenData)
       throw new Error('Failed to get PhonePe access token')
     }
 
-    // Create payment request
     const websiteUrl = Deno.env.get('WEBSITE_URL')!
     const paymentPayload = {
-      merchantId: merchantId,
-      merchantTransactionId: orderData.merchantTransactionId,
-      amount: Math.round(orderData.totalAmount * 100), // Convert to paise
-      merchantUserId: `USER_${Date.now()}`,
-      redirectUrl: `${websiteUrl}/payment-status.html?txnId=${orderData.merchantTransactionId}`,
-      redirectMode: 'REDIRECT',
-      callbackUrl: `${supabaseUrl}/functions/v1/payment-webhook`,
-      paymentInstrument: {
-        type: 'PAY_PAGE'
+      merchantOrderId: orderData.merchantTransactionId,
+      amount: Math.round(orderData.totalAmount * 100),
+      expireAfter: 1800,
+      paymentFlow: {
+        type: "PG_CHECKOUT",
+        merchantUrls: {
+          redirectUrl: `${websiteUrl}/payment-status.html?txnId=${orderData.merchantTransactionId}`
+        }
       }
     }
 
-    const paymentResponse = await fetch(`${baseUrl}/apis/pg-sandbox/v1/pg/pay`, {
+    console.log('Payment payload:', JSON.stringify(paymentPayload, null, 2))
+
+    const paymentResponse = await fetch(paymentUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${tokenData.access_token}`
+        'Authorization': `O-Bearer ${tokenData.access_token}`
       },
       body: JSON.stringify(paymentPayload)
     })
 
-    const paymentData = await paymentResponse.json()
+    console.log('Payment response status:', paymentResponse.status)
+    const responseText = await paymentResponse.text()
+    console.log('Payment response body:', responseText)
+
+    let paymentData
+    try {
+      paymentData = JSON.parse(responseText)
+    } catch (e) {
+      console.error('Failed to parse payment response as JSON')
+      throw new Error(`PhonePe API error: ${paymentResponse.status} - ${responseText}`)
+    }
+
+    if (paymentResponse.status !== 200 || !paymentData.redirectUrl) {
+      console.error('Payment initiation failed:', paymentData)
+      throw new Error(paymentData.message || paymentData.code || 'Failed to initiate payment with PhonePe')
+    }
+
+    await supabase
+      .from('orders')
+      .update({ phonepe_transaction_id: paymentData.orderId })
+      .eq('id', order.id)
 
     return new Response(
       JSON.stringify({
         success: true,
         orderId: order.id,
-        paymentUrl: paymentData.data?.instrumentResponse?.redirectInfo?.url,
-        merchantTransactionId: orderData.merchantTransactionId
+        paymentUrl: paymentData.redirectUrl,
+        merchantTransactionId: orderData.merchantTransactionId,
+        phonepeOrderId: paymentData.orderId
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )

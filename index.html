@@ -558,7 +558,7 @@
 
 
     <!-- view cart section -->
-    <div class="cart-drawer-backdrop" id="cartDrawerBackdrop"></div>
+    <!-- <div class="cart-drawer-backdrop" id="cartDrawerBackdrop"></div>
 
     <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
         <div class="cart-drawer-header">
@@ -568,7 +568,7 @@
             </button>
         </div>
         <div class="cart-drawer-body" id="cartDrawerBody">
-            <!-- items inserted via JS -->
+            
         </div>
         <div class="cart-drawer-footer">
             <div class="cart-total">
@@ -581,7 +581,76 @@
             </button>
         </div>
 
-    </aside>
+    </aside> -->
+
+    <!-- View cart section -->
+<div class="cart-drawer-backdrop" id="cartDrawerBackdrop"></div>
+
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <div class="cart-drawer-header">
+        <h3>Your Cart</h3>
+        <button class="cart-drawer-close" id="cartDrawerClose">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    
+    <div class="cart-drawer-body" id="cartDrawerBody">
+        <!-- Items will be inserted via JS -->
+    </div>
+
+    <!-- CUSTOMER DETAILS FORM IN CART -->
+    <div class="cart-customer-form" id="cartCustomerForm" style="display: none;">
+        <h4 style="font-size: 1rem; margin-bottom: 1rem; color: var(--forest-deep);">
+            <i class="fa-solid fa-user"></i> Customer Details
+        </h4>
+        
+        <div class="form-group-compact">
+            <input type="text" id="cartCustomerName" placeholder="Full Name *" required />
+        </div>
+        
+        <div class="form-group-compact">
+            <input type="email" id="cartCustomerEmail" placeholder="Email Address *" required />
+        </div>
+        
+        <div class="form-group-compact">
+            <input type="tel" id="cartCustomerPhone" placeholder="Phone Number *" required pattern="[0-9+\s-]+" />
+        </div>
+        
+        <div class="form-group-compact">
+            <select id="cartCustomerState" required>
+                <option value="">Select State *</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Other">Other State</option>
+            </select>
+        </div>
+        
+        <div class="form-group-compact">
+            <textarea id="cartCustomerAddress" placeholder="Complete Address *" rows="3" required></textarea>
+        </div>
+        
+        <div class="form-error" id="cartFormError"></div>
+    </div>
+
+    <div class="cart-drawer-footer">
+        <div class="cart-total">
+            <span>Total</span>
+            <strong id="cartDrawerTotal">₹0</strong>
+        </div>
+        <button class="btn-primary cart-checkout-btn" id="upiPayBtn">
+            <span>Proceed to Checkout</span>
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+        </button>
+    </div>
+</aside>
 
     <!-- Payment Modal -->
     <div class="payment-modal-backdrop" id="paymentModalBackdrop"></div>

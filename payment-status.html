@@ -137,8 +137,12 @@
                 if (result.success) {
     console.log('Verification result:', result);
     
-    // Check PhonePe status (COMPLETED, PENDING, FAILED)
     const isSuccess = result.phonepeStatus === 'COMPLETED' || result.paymentStatus === 'success';
+    
+    // CLEAR CART ON SUCCESS
+    if (isSuccess) {
+        localStorage.removeItem('aazhi_cart');
+    }
     
     showStatus(
         isSuccess ? 'success' : 'failed',
@@ -152,19 +156,6 @@
     throw new Error('Verification failed');
 }
                 
-                // if (result.success) {
-                //     const isSuccess = result.paymentStatus === 'success';
-                //     showStatus(
-                //         isSuccess ? 'success' : 'failed',
-                //         isSuccess ? 'Payment Successful!' : 'Payment Failed',
-                //         isSuccess 
-                //             ? `Your order has been confirmed. You will receive a confirmation email shortly.`
-                //             : 'Your payment could not be processed. Please try again.',
-                //         result.order.order_number
-                //     );
-                // } else {
-                //     throw new Error('Verification failed');
-                // }
                 
             } catch (error) {
                 console.error('Verification error:', error);
