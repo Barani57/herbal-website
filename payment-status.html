@@ -137,24 +137,31 @@
                 if (result.success) {
     console.log('Verification result:', result);
     
-    const isSuccess = result.phonepeStatus === 'COMPLETED' || result.paymentStatus === 'success';
+    // ✅ Check multiple status indicators
+    const isSuccess = 
+        result.phonepeStatus === 'COMPLETED' || 
+        result.paymentStatus === 'success' ||
+        result.code === 'PAYMENT_SUCCESS';
     
-    // CLEAR CART ON SUCCESS
+    // ✅ CLEAR CART ON SUCCESS
     if (isSuccess) {
         localStorage.removeItem('aazhi_cart');
+        console.log('✅ Cart cleared');
     }
     
     showStatus(
         isSuccess ? 'success' : 'failed',
         isSuccess ? 'Payment Successful!' : 'Payment Failed',
         isSuccess 
-            ? `Your order has been confirmed. You will receive a confirmation email shortly.`
-            : 'Your payment could not be processed. Please try again.',
-        result.order.order_number
+            ? `Your order has been confirmed. You will receive a confirmation email shortly at ${result.order?.customer_email || 'your email'}.`
+            : 'Your payment could not be processed. Please try again or contact support.',
+        result.order?.order_number
     );
 } else {
     throw new Error('Verification failed');
 }
+
+
                 
                 
             } catch (error) {
