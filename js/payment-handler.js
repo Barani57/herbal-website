@@ -1,4 +1,4 @@
-// payment-handler.js - PhonePe Integration
+// payment-handler.js - PhonePe NEW API Integration
 
 let currentOrderId = null;
 let currentOrderNumber = null;
@@ -71,7 +71,7 @@ if (upiPayBtn) {
         const timestamp = Date.now();
         const orderNumber = `ORD-${timestamp}`;
 
-        // ✅ FIXED: Prepare data in correct format for backend
+        // ✅ NEW API: Prepare data in correct format
         const orderData = {
             order_number: orderNumber,
             customerName: name,
@@ -82,7 +82,7 @@ if (upiPayBtn) {
             totalAmount: totalAmount.toFixed(2)
         };
 
-        // ✅ FIXED: Prepare items array separately
+        // ✅ NEW API: Prepare items array
         const items = cart.map(item => ({
             name: item.name,
             size: item.size,
@@ -100,8 +100,8 @@ if (upiPayBtn) {
             upiPayBtn.disabled = true;
             upiPayBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
 
-            // ✅ FIXED: Send data in correct format
-            const response = await fetch(`${SUPABASE_URL}/functions/v1/initiate-payment`, {
+            // ✅ NEW API: Call create-payment function
+            const response = await fetch(`${SUPABASE_URL}/functions/v1/create-payment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,10 +117,10 @@ if (upiPayBtn) {
             console.log('💳 Payment Response:', result);
 
             if (result.success && result.redirectUrl) {
-                // Store transaction ID for verification
-                localStorage.setItem('pending_txn_id', result.merchantTransactionId);
+                // Store order number for status check
+                localStorage.setItem('pending_order_id', orderNumber);
                 
-                // Redirect to PhonePe
+                // Redirect to PhonePe Checkout Page
                 console.log('✅ Redirecting to PhonePe...');
                 window.location.href = result.redirectUrl;
             } else {
@@ -229,7 +229,7 @@ if (customerForm) {
             const timestamp = Date.now();
             currentOrderNumber = `ORD-${timestamp}`;
 
-            // ✅ Prepare order data
+            // ✅ NEW API: Prepare order data
             const orderData = {
                 order_number: currentOrderNumber,
                 customerName: customerData.name,
@@ -240,7 +240,7 @@ if (customerForm) {
                 totalAmount: totalAmount.toFixed(2)
             };
 
-            // ✅ Prepare items
+            // ✅ NEW API: Prepare items
             const items = cart.map(item => ({
                 name: item.name,
                 size: item.size,
@@ -250,8 +250,8 @@ if (customerForm) {
                 lineTotal: (parseFloat(item.price) * item.quantity).toFixed(2)
             }));
 
-            // Call Supabase Edge Function
-            const response = await fetch(`${SUPABASE_URL}/functions/v1/initiate-payment`, {
+            // ✅ NEW API: Call create-payment function
+            const response = await fetch(`${SUPABASE_URL}/functions/v1/create-payment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -266,10 +266,10 @@ if (customerForm) {
             const result = await response.json();
 
             if (result.success && result.redirectUrl) {
-                currentOrderId = result.orderId;
+                currentOrderId = result.phonepeOrderId;
 
-                // Store transaction ID
-                localStorage.setItem('pending_txn_id', result.merchantTransactionId);
+                // Store order number for status check
+                localStorage.setItem('pending_order_id', currentOrderNumber);
 
                 // Close modal
                 closePaymentModal();
@@ -318,7 +318,7 @@ function closeResultModal() {
     if (resultIcon && resultIcon.classList.contains('success')) {
         const CART_KEY = 'aazhi_cart';
         localStorage.removeItem(CART_KEY);
-        localStorage.removeItem('pending_txn_id');
+        localStorage.removeItem('pending_order_id');
         if (typeof updateFloatingCart === 'function') updateFloatingCart(0);
         if (typeof renderCartDrawerItems === 'function') renderCartDrawerItems();
         if (typeof renderProducts === 'function') renderProducts();
@@ -348,4 +348,4 @@ function hideError() {
     }
 }
 
-console.log('✅ Payment handler loaded');
+console.log('✅ Payment handler loaded (NEW API)');
