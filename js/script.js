@@ -319,7 +319,7 @@ const products = [
     ingredients: ['Green Gram', 'Wild Turmeric', 'Rose Petal', 'Sandalwood'],
     usage: 'Mix with water or milk and apply all over the body. Rinse after 5 minutes.',
     sizes: [
-        { size: '100g', price: 299, sku: 'NM-M-100' },
+        { size: '100g', price: 169, sku: 'NM-M-100' },
         { size: '250g', price: 299, sku: 'NM-M-250' }
     ]
 },
@@ -341,10 +341,10 @@ const products = [
     ingredients: ['Green Gram', 'Wild Turmeric', 'Rose Petal', 'Sandalwood'],
     usage: 'Mix with water or milk and apply all over the body. Rinse after 5 minutes.',
     sizes: [
-        { size: '100g', price: 250, sku: 'NM-F-100' },
-        { size: '250g', price: 250, sku: 'NM-F-250' },
-        { size: '500g', price: 450, sku: 'NM-F-500' },
-        { size: '1kg', price: 450, sku: 'NM-F-1K' }
+        { size: '100g', price: 169, sku: 'NM-F-100' },
+        { size: '250g', price: 299, sku: 'NM-F-250' },
+        { size: '500g', price: 599, sku: 'NM-F-500' },
+        { size: '1kg', price: 999, sku: 'NM-F-1K' }
     ]
 }
 ];
