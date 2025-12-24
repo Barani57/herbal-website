@@ -115,11 +115,18 @@ async function loadOrders() {
   }
 }
 
-// Update statistics
+// ✅ FIXED: Update statistics - Only count successful payments for revenue
 function updateStats() {
   const totalOrdersCount = allOrders.length;
+  
+  // ✅ Filter by payment status correctly
   const successCount = allOrders.filter(o => o.payment_status === 'success').length;
-  const pendingCount = allOrders.filter(o => o.payment_status === 'pending' || o.payment_status === 'initiated').length;
+  const pendingCount = allOrders.filter(o => 
+    o.payment_status === 'pending' || o.payment_status === 'initiated'
+  ).length;
+  const failedCount = allOrders.filter(o => o.payment_status === 'failed').length;
+  
+  // ✅ FIXED: Calculate revenue from SUCCESSFUL payments ONLY
   const totalRevenue = allOrders
     .filter(o => o.payment_status === 'success')
     .reduce((sum, o) => sum + parseFloat(o.total_amount || 0), 0);
@@ -127,7 +134,23 @@ function updateStats() {
   document.getElementById('totalOrders').textContent = totalOrdersCount;
   document.getElementById('successOrders').textContent = successCount;
   document.getElementById('pendingOrders').textContent = pendingCount;
+  
+  // ✅ ADDED: Update failed orders count if element exists
+  const failedOrdersElement = document.getElementById('failedOrders');
+  if (failedOrdersElement) {
+    failedOrdersElement.textContent = failedCount;
+  }
+  
+  // ✅ FIXED: Show revenue only from successful payments
   document.getElementById('totalRevenue').textContent = `₹${totalRevenue.toFixed(2)}`;
+  
+  console.log('📊 Stats Updated:', {
+    total: totalOrdersCount,
+    success: successCount,
+    pending: pendingCount,
+    failed: failedCount,
+    revenue: totalRevenue.toFixed(2)
+  });
 }
 
 // Apply filters
@@ -376,10 +399,8 @@ async function viewOrderDetails(orderId) {
   }
 }
 
-
 // Delete order with confirmation
 async function deleteOrder(orderId, orderNumber) {
-    // Show confirmation dialog
     const confirmed = confirm(
         `⚠️ DELETE ORDER CONFIRMATION\n\n` +
         `Order Number: #${orderNumber}\n\n` +
@@ -391,14 +412,13 @@ async function deleteOrder(orderId, orderNumber) {
     );
 
     if (!confirmed) {
-        return; // User cancelled
+        return;
     }
 
     try {
-        // Show loading state (you can add a loading spinner here)
         console.log(`Deleting order ${orderId}...`);
 
-        // First, delete all order_items associated with this order
+        // First, delete all order_items
         const { error: itemsError } = await supabaseClient
             .from('order_items')
             .delete()
@@ -408,7 +428,7 @@ async function deleteOrder(orderId, orderNumber) {
             throw new Error(`Failed to delete order items: ${itemsError.message}`);
         }
 
-        // Then, delete the order itself
+        // Then, delete the order
         const { error: orderError } = await supabaseClient
             .from('orders')
             .delete()
@@ -418,10 +438,7 @@ async function deleteOrder(orderId, orderNumber) {
             throw new Error(`Failed to delete order: ${orderError.message}`);
         }
 
-        // Success - show notification
         alert(`✓ Order #${orderNumber} has been successfully deleted.`);
-
-        // Reload orders to refresh the table
         await loadOrders();
 
     } catch (error) {
@@ -430,7 +447,7 @@ async function deleteOrder(orderId, orderNumber) {
     }
 }
 
-// Render order modal
+// ✅ FIXED: Render order modal with correct delivery charge
 function renderOrderModal(order) {
   const date = new Date(order.created_at);
   const formattedDate = date.toLocaleDateString('en-IN', {
@@ -441,17 +458,17 @@ function renderOrderModal(order) {
     minute: '2-digit'
   });
   
-  // Calculate subtotal
+  // ✅ FIXED: Calculate delivery based on customer state
   const subtotal = order.order_items.reduce((sum, item) => sum + parseFloat(item.line_total), 0);
-  const delivery = 50;
+  const delivery = order.customer_state === 'Tamil Nadu' ? 50 : 100;
   const total = order.total_amount;
   
   orderModalBody.innerHTML = `
-  <div style="text-align: center; margin: 1rem 0;">
-    <button class="btn-secondary" onclick="printOrder('${order.id}')" style="border: none;">
-        <i class="fa-solid fa-print"></i> Print Receipt
-    </button>
-</div>
+    <div style="text-align: center; margin: 1rem 0;">
+      <button class="btn-secondary" onclick="printOrder('${order.id}')" style="border: none;">
+          <i class="fa-solid fa-print"></i> Print Receipt
+      </button>
+    </div>
     <div class="order-details-grid">
       <div class="detail-card">
         <div class="detail-label">
@@ -479,6 +496,13 @@ function renderOrderModal(order) {
           <i class="fa-solid fa-phone"></i> Phone
         </div>
         <div class="detail-value">${order.customer_phone}</div>
+      </div>
+      
+      <div class="detail-card">
+        <div class="detail-label">
+          <i class="fa-solid fa-map-location-dot"></i> State
+        </div>
+        <div class="detail-value">${order.customer_state}</div>
       </div>
       
       <div class="detail-card" style="grid-column: 1 / -1;">
@@ -533,21 +557,21 @@ function renderOrderModal(order) {
       </div>
     </div>
     <div style="text-align: center; margin: 2rem 0;">
-    <a 
-        href="https://wa.me/${order.customer_phone}?text=Hello%20${encodeURIComponent(order.customer_name)},%20regarding%20your%20Aazhi%20order%20${order.order_number}" 
-        target="_blank"
-        class="btn-primary" 
-        style="display: inline-flex; text-decoration: none;">
-        <i class="fa-brands fa-whatsapp"></i> Contact Customer on WhatsApp
-    </a>
-</div>
+      <a 
+          href="https://wa.me/${order.customer_phone}?text=Hello%20${encodeURIComponent(order.customer_name)},%20regarding%20your%20Aazhi%20order%20${order.order_number}" 
+          target="_blank"
+          class="btn-primary" 
+          style="display: inline-flex; text-decoration: none;">
+          <i class="fa-brands fa-whatsapp"></i> Contact Customer on WhatsApp
+      </a>
+    </div>
     <div class="order-summary">
       <div class="summary-row">
         <span>Subtotal:</span>
         <span>₹${subtotal.toFixed(2)}</span>
       </div>
       <div class="summary-row">
-        <span>Delivery Charge:</span>
+        <span>Delivery Charge (${order.customer_state}):</span>
         <span>₹${delivery.toFixed(2)}</span>
       </div>
       <div class="summary-row total">
@@ -579,7 +603,6 @@ function exportToExcel() {
     return;
   }
   
-  // Prepare data for export
   const exportData = filteredOrders.map(order => {
     const itemsCount = order.order_items ? order.order_items.length : 0;
     const itemsNames = order.order_items ? order.order_items.map(i => i.product_name).join(', ') : '';
@@ -589,6 +612,7 @@ function exportToExcel() {
       'Customer Name': order.customer_name,
       'Email': order.customer_email,
       'Phone': order.customer_phone,
+      'State': order.customer_state,
       'Address': order.customer_address,
       'Total Amount': parseFloat(order.total_amount).toFixed(2),
       'Payment Status': order.payment_status,
@@ -598,16 +622,15 @@ function exportToExcel() {
     };
   });
   
-  // Create workbook and worksheet
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(exportData);
   
-  // Set column widths
   ws['!cols'] = [
     { wch: 20 }, // Order Number
     { wch: 20 }, // Customer Name
     { wch: 30 }, // Email
     { wch: 15 }, // Phone
+    { wch: 15 }, // State
     { wch: 40 }, // Address
     { wch: 12 }, // Total Amount
     { wch: 15 }, // Payment Status
@@ -618,81 +641,19 @@ function exportToExcel() {
   
   XLSX.utils.book_append_sheet(wb, ws, 'Orders');
   
-  // Generate filename with timestamp
   const timestamp = new Date().toISOString().slice(0, 10);
   const filename = `aazhi-orders-${timestamp}.xlsx`;
   
-  // Download file
   XLSX.writeFile(wb, filename);
-}
-
-// Export to CSV
-function exportToCSV() {
-  if (filteredOrders.length === 0) {
-    alert('No data to export');
-    return;
-  }
-  
-  // Prepare data for export
-  const headers = [
-    'Order Number',
-    'Customer Name',
-    'Email',
-    'Phone',
-    'Address',
-    'Total Amount',
-    'Payment Status',
-    'Items Count',
-    'Items',
-    'Order Date'
-  ];
-  
-  const rows = filteredOrders.map(order => {
-    const itemsCount = order.order_items ? order.order_items.length : 0;
-    const itemsNames = order.order_items ? order.order_items.map(i => i.product_name).join('; ') : '';
-    
-    return [
-      order.order_number,
-      order.customer_name,
-      order.customer_email,
-      order.customer_phone,
-      order.customer_address.replace(/,/g, ';'), // Replace commas to avoid CSV issues
-      parseFloat(order.total_amount).toFixed(2),
-      order.payment_status,
-      itemsCount,
-      itemsNames,
-      new Date(order.created_at).toLocaleString('en-IN')
-    ];
-  });
-  
-  // Create CSV content
-  let csvContent = headers.map(h => `"${h}"`).join(',') + '\n';
-  
-  rows.forEach(row => {
-    csvContent += row.map(cell => `"${cell}"`).join(',') + '\n';
-  });
-  
-  // Create blob and download
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  const url = URL.createObjectURL(blob);
-  
-  const timestamp = new Date().toISOString().slice(0, 10);
-  const filename = `aazhi-orders-${timestamp}.csv`;
-  
-  link.setAttribute('href', url);
-  link.setAttribute('download', filename);
-  link.style.visibility = 'hidden';
-  
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
 }
 
 // Print order receipt
 function printOrder(orderId) {
     const order = allOrders.find(o => o.id === orderId);
     if (!order) return;
+    
+    const delivery = order.customer_state === 'Tamil Nadu' ? 50 : 100;
+    const subtotal = order.order_items.reduce((sum, item) => sum + parseFloat(item.line_total), 0);
     
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
@@ -703,11 +664,12 @@ function printOrder(orderId) {
             <style>
                 body { font-family: Arial, sans-serif; padding: 20px; }
                 .header { text-align: center; margin-bottom: 30px; }
-                .logo { font-size: 24px; font-weight: bold; color: #816F56; }
+                .logo { font-size: 24px; font-weight: bold; color: #1a2e1f; }
                 table { width: 100%; border-collapse: collapse; margin: 20px 0; }
                 th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-                th { background: #816F56; color: white; }
+                th { background: #1a2e1f; color: white; }
                 .total { font-weight: bold; font-size: 18px; }
+                .summary { margin-top: 20px; text-align: right; }
             </style>
         </head>
         <body>
@@ -720,6 +682,7 @@ function printOrder(orderId) {
             <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleDateString()}</p>
             <p><strong>Customer:</strong> ${order.customer_name}</p>
             <p><strong>Phone:</strong> ${order.customer_phone}</p>
+            <p><strong>State:</strong> ${order.customer_state}</p>
             <p><strong>Address:</strong> ${order.customer_address}</p>
             
             <h3>Items:</h3>
@@ -746,7 +709,11 @@ function printOrder(orderId) {
                 </tbody>
             </table>
             
-            <p class="total">Total: ₹${order.total_amount}</p>
+            <div class="summary">
+                <p>Subtotal: ₹${subtotal.toFixed(2)}</p>
+                <p>Delivery (${order.customer_state}): ₹${delivery.toFixed(2)}</p>
+                <p class="total">Total: ₹${order.total_amount}</p>
+            </div>
             
             <script>
                 window.print();
@@ -758,10 +725,7 @@ function printOrder(orderId) {
     printWindow.document.close();
 }
 
-// Make printOrder available globally
-window.printOrder = printOrder;
-
-// Make viewOrderDetails available globally
+// Make functions available globally
 window.viewOrderDetails = viewOrderDetails;
 window.goToPage = goToPage;
 window.deleteOrder = deleteOrder;
