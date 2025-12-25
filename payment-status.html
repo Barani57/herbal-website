@@ -1,83 +1,194 @@
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./js/supabase-config.js"></script>
-<script>
-    // ✅ NEW: Get orderId from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const orderId = urlParams.get('orderId');
-    
-    async function verifyPayment() {
-        try {
-            if (!orderId) {
-                throw new Error('Order ID not found');
-            }
-            
-            // ✅ NEW: Call check-payment-status function
-            const response = await fetch(`${SUPABASE_URL}/functions/v1/check-payment-status`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                },
-                body: JSON.stringify({ merchantOrderId: orderId })
-            });
-            
-            const result = await response.json();
-            console.log('✅ Verification result:', result);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Status - Aazhi Products</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3a2e 0%, #2d5a46 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .status-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        .status-icon.success {
+            color: #10b981;
+        }
+        .status-icon.failed {
+            color: #ef4444;
+        }
+        .status-icon.pending {
+            color: #f59e0b;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #1e3a2e;
+        }
+        p {
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .order-number {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 600;
+            color: #2d5a46;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #2d5a46 0%, #1e3a2e 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 10px;
+            text-decoration: none;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2d5a46;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="statusIcon" class="status-icon">
+            <div class="loader"></div>
+        </div>
+        <h1 id="statusTitle">Verifying Payment...</h1>
+        <p id="statusMessage">Please wait while we confirm your payment status.</p>
+        <div id="orderNumber" class="order-number" style="display: none;"></div>
+        <a href="/" class="btn" id="homeBtn" style="display: none;">
+            <i class="fa-solid fa-home"></i> Back to Home
+        </a>
+    </div>
 
-            if (result.success) {
-                // ✅ Check payment status
-                const isSuccess = 
-                    result.phonepeState === 'COMPLETED' || 
-                    result.paymentStatus === 'success';
-                
-                // ✅ Clear cart on success
-                if (isSuccess) {
-                    localStorage.removeItem('aazhi_cart');
-                    localStorage.removeItem('pending_order_id');
-                    console.log('✅ Cart cleared');
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./js/supabase-config.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+        
+        async function verifyPayment() {
+            try {
+                if (!orderId) {
+                    throw new Error('Order ID not found');
                 }
                 
+                console.log('🔍 Checking payment status for:', orderId);
+                
+                // ✅ Call check-payment-status function
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/check-payment-status`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({ merchantOrderId: orderId })
+                });
+                
+                const result = await response.json();
+                console.log('✅ Status check result:', result);
+
+                if (result.success) {
+                    const isSuccess = result.paymentStatus === 'success' || result.phonepeState === 'COMPLETED';
+                    
+                    // Clear cart on success
+                    if (isSuccess) {
+                        localStorage.removeItem('aazhi_cart');
+                        localStorage.removeItem('pending_order_id');
+                        console.log('✅ Cart cleared');
+                    }
+                    
+                    showStatus(
+                        isSuccess ? 'success' : 'failed',
+                        isSuccess ? 'Payment Successful!' : 'Payment Failed',
+                        isSuccess 
+                            ? `Your order #${orderId} has been confirmed. You will receive a confirmation email shortly at ${result.order?.customer_email || 'your email'}.`
+                            : 'Your payment could not be processed. Please try again or contact support.',
+                        orderId
+                    );
+                } else {
+                    throw new Error(result.error || 'Verification failed');
+                }
+                
+            } catch (error) {
+                console.error('❌ Verification error:', error);
                 showStatus(
-                    isSuccess ? 'success' : 'failed',
-                    isSuccess ? 'Payment Successful!' : 'Payment Failed',
-                    isSuccess 
-                        ? `Your order #${result.order?.order_number || orderId} has been confirmed. You will receive a confirmation email shortly.`
-                        : 'Your payment could not be processed. Please try again or contact support.',
-                    result.order?.order_number
+                    'failed', 
+                    'Verification Failed', 
+                    'Unable to verify payment status. Please contact support with your order ID: ' + orderId, 
+                    orderId
                 );
-            } else {
-                throw new Error('Verification failed');
+            }
+        }
+        
+        function showStatus(type, title, message, orderNum) {
+            const statusIcon = document.getElementById('statusIcon');
+            const statusTitle = document.getElementById('statusTitle');
+            const statusMessage = document.getElementById('statusMessage');
+            const orderNumber = document.getElementById('orderNumber');
+            const homeBtn = document.getElementById('homeBtn');
+            
+            statusIcon.className = `status-icon ${type}`;
+            statusIcon.innerHTML = type === 'success' 
+                ? '<i class="fa-solid fa-check-circle"></i>'
+                : type === 'pending'
+                ? '<i class="fa-solid fa-clock"></i>'
+                : '<i class="fa-solid fa-times-circle"></i>';
+            
+            statusTitle.textContent = title;
+            statusMessage.textContent = message;
+            
+            if (orderNum) {
+                orderNumber.textContent = `Order Number: ${orderNum}`;
+                orderNumber.style.display = 'block';
             }
             
-        } catch (error) {
-            console.error('❌ Verification error:', error);
-            showStatus('failed', 'Verification Failed', 'Unable to verify payment status. Please contact support with your order ID: ' + orderId, null);
-        }
-    }
-    
-    function showStatus(type, title, message, orderNum) {
-        const statusIcon = document.getElementById('statusIcon');
-        const statusTitle = document.getElementById('statusTitle');
-        const statusMessage = document.getElementById('statusMessage');
-        const orderNumber = document.getElementById('orderNumber');
-        const homeBtn = document.getElementById('homeBtn');
-        
-        statusIcon.className = `status-icon ${type}`;
-        statusIcon.innerHTML = type === 'success' 
-            ? '<i class="fa-solid fa-check-circle"></i>'
-            : '<i class="fa-solid fa-times-circle"></i>';
-        
-        statusTitle.textContent = title;
-        statusMessage.textContent = message;
-        
-        if (orderNum) {
-            orderNumber.textContent = `Order Number: ${orderNum}`;
-            orderNumber.style.display = 'block';
+            homeBtn.style.display = 'inline-block';
         }
         
-        homeBtn.style.display = 'inline-flex';
-    }
-    
-    // Verify payment on page load
-    verifyPayment();
-</script>
+        // Auto-verify on page load
+        verifyPayment();
+    </script>
+</body>
+</html>
